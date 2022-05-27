@@ -1,0 +1,59 @@
+﻿@namespace YKToolkit.Blazor
+@using System.Collections.Specialized
+@typeparam T
+
+@if ((ItemsSource != null) && ItemsSource.Any())
+{
+    @foreach (var item in ItemsSource)
+    {
+        @if (ChildContent == null)
+        {
+            @item<br/>
+        }
+        else
+        {
+            @ChildContent(item);
+        }
+    }
+}
+
+@code {
+    private IEnumerable<T>? _itemsSource;
+    /// <summary>
+    /// アイテムコレクションを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public IEnumerable<T>? ItemsSource
+    {
+        get => this._itemsSource;
+        set
+        {
+            if (this._itemsSource is INotifyCollectionChanged oldValue)
+            {
+                oldValue.CollectionChanged -= OnCollectionChanged;
+            }
+            this._itemsSource = value;
+            if (this._itemsSource is INotifyCollectionChanged newValue)
+            {
+                newValue.CollectionChanged += OnCollectionChanged;
+            }
+        }
+    }
+
+    /// <summary>
+    /// アイテムコレクションに対するテンプレートを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public RenderFragment<T>? ChildContent { get; set; }
+
+    /// <summary>
+    /// コレクション要素変更イベントハンドラ
+    /// </summary>
+    /// <param name="sender">イベント発行元</param>
+    /// <param name="e">イベント引数</param>
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+}

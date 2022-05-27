@@ -1,0 +1,126 @@
+﻿@namespace YKToolkit.Blazor
+@using System.Collections.Specialized
+@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Components.Forms
+@typeparam T
+
+<select class="@(@class)" id="@id" @onchange="p => OnChange(p.Value)">
+    <ItemsControl ItemsSource="ItemsSource" Context="item">
+        <option value="@item.GetHashCode()" selected="@(EqualityComparer<T>.Default.Equals(SelectedItem, item))">
+            @if (ChildContent is not null)
+            {
+                @ChildContent(item);
+            }
+            else if (string.IsNullOrWhiteSpace(DisplayMemberPath))
+            {
+                @item
+            }
+            else
+            {
+                @item.GetType().GetProperty(DisplayMemberPath)?.GetValue(item)?.ToString()
+            }
+        </option>
+    </ItemsControl>
+</select>
+
+@code {
+    /// <summary>
+    /// CSS クラスとして示す文字列を取得または設定します。
+    /// </summary>
+    [Parameter]
+    public string? @class { get; set; } = "form-select";
+
+    /// <summary>
+    /// HTML 要素として示す id 属性を取得または設定します。
+    /// </summary>
+    [Parameter]
+    public string? id { get; set; }
+
+    [Parameter]
+    public string? DisplayMemberPath { get; set; }
+
+    private IEnumerable<T>? _itemsSource;
+    /// <summary>
+    /// アイテムコレクションを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public IEnumerable<T>? ItemsSource
+    {
+        get => this._itemsSource;
+        set
+        {
+            if (this._itemsSource is INotifyCollectionChanged oldValue)
+            {
+                oldValue.CollectionChanged -= OnCollectionChanged;
+            }
+            this._itemsSource = value;
+            if (this._itemsSource is INotifyCollectionChanged newValue)
+            {
+                newValue.CollectionChanged += OnCollectionChanged;
+            }
+        }
+    }
+
+    /// <summary>
+    /// アイテムコレクションに対するテンプレートを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public RenderFragment<T>? ChildContent { get; set; }
+
+    private T? _selectedItem;
+    /// <summary>
+    /// 選択中のアイテムを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public T? SelectedItem
+    {
+        get => this._selectedItem;
+        set
+        {
+            if (EqualityComparer<T>.Default.Equals(this._selectedItem, value) == false)
+            {
+                this._selectedItem = value;
+
+                // 外部から変更されたときに選択アイテムを変更するためにコール
+                // 内部から変更する場合は必要ないので、内部で変更する場合は _selectedItem を使用すること。
+                StateHasChanged();
+            }
+        }
+    }
+
+    [Parameter]
+    public EventCallback<T> SelectedItemChanged { get; set; }
+
+    /// <summary>
+    /// コレクション要素変更イベントハンドラ
+    /// </summary>
+    /// <param name="sender">イベント発行元</param>
+    /// <param name="e">イベント引数</param>
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// 選択アイテム変更イベントハンドラ
+    /// </summary>
+    /// <param name="p"></param>
+    private void OnChange(object? p)
+    {
+        if (p is null) throw new ArgumentNullException();
+        if (this.ItemsSource is null) throw new InvalidOperationException();
+
+        var hash = int.Parse((string)p);
+        var hashes = this.ItemsSource.Select(x => x.GetHashCode()).ToArray();
+        var hashes2 = this.ItemsSource.Select(x => x.GetHashCode()).ToArray();
+        foreach (var item in this.ItemsSource)
+        {
+            if (item.GetHashCode() == hash)
+            {
+                this._selectedItem = item;
+                this.SelectedItemChanged.InvokeAsync(this._selectedItem);
+                break;
+            }
+        }
+    }
+}

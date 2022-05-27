@@ -1,0 +1,102 @@
+﻿@namespace YKToolkit.Blazor
+@using System.Windows.Input
+
+<button class="@(@class)" @onclick="() => Command?.Execute(CommandParameter)" disabled="@Disabled">@ChildContent</button>
+
+@code {
+    /// <summary>
+    /// CSS クラスとして示す文字列を取得または設定します。
+    /// </summary>
+    [Parameter]
+    public string? @class { get; set; }
+
+    /// <summary>
+    /// コンテンツを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private bool _isEnabled = true;
+    /// <summary>
+    /// ボタンが操作可能かどうかを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public bool IsEnabled
+    {
+        get => this._isEnabled;
+        set
+        {
+            this._isEnabled = value;
+            UpdateCanExecute();
+        }
+    }
+
+    private ICommand? _command;
+    /// <summary>
+    /// ボタン操作によって実行されるコマンドを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public ICommand? Command
+    {
+        get { return this._command; }
+        set
+        {
+            if (this._command != null)
+            {
+                this._command.CanExecuteChanged -= OnCanExecuteChanged;
+            }
+            this._command = value;
+            if (this._command != null)
+            {
+                this._command.CanExecuteChanged += OnCanExecuteChanged;
+            }
+        }
+    }
+
+    /// <summary>
+    /// ボタン操作によって実行されるコマンドに対するパラメータを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public object? CommandParameter { get; set; }
+
+    /// <summary>
+    /// ボタンの操作禁止状態を取得または設定します。
+    /// </summary>
+    private bool Disabled { get; set; }
+
+    /// <summary>
+    /// レンダリングツリーのコンポーネントの親またはルートパラメータから指定されたパラメータが設定されます。
+    /// </summary>
+    /// <returns>コンポーネントの更新とレンダリングが完了したときに完了するタスクを返します。</returns>
+    protected override Task OnParametersSetAsync()
+    {
+        UpdateCanExecute();
+
+        return base.OnParametersSetAsync();
+    }
+
+    /// <summary>
+    /// CanExecuteChanged イベントハンドラ
+    /// </summary>
+    /// <param name="sender">イベント発行元</param>
+    /// <param name="e">イベント引数</param>
+    private void OnCanExecuteChanged(object? sender, EventArgs e)
+    {
+        UpdateCanExecute();
+    }
+
+    /// <summary>
+    /// ボタンの操作可否を更新します。
+    /// </summary>
+    private void UpdateCanExecute()
+    {
+        if (this.IsEnabled)
+        {
+            this.Disabled = !Command?.CanExecute(CommandParameter) ?? false;
+        }
+        else
+        {
+            this.Disabled = true;
+        }
+    }
+}

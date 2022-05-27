@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YKToolkit.Blazor", "YKToolkit.Blazor\YKToolkit.Blazor.csproj", "{33740FDD-42D5-41D4-8A04-E906E16956F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YKToolkit.Blazor.Sample", "YKToolkit.Blazor.Sample\YKToolkit.Blazor.Sample.csproj", "{F11473C4-7ADA-4FD7-80F3-DA523635EA91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33740FDD-42D5-41D4-8A04-E906E16956F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33740FDD-42D5-41D4-8A04-E906E16956F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33740FDD-42D5-41D4-8A04-E906E16956F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33740FDD-42D5-41D4-8A04-E906E16956F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F11473C4-7ADA-4FD7-80F3-DA523635EA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F11473C4-7ADA-4FD7-80F3-DA523635EA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F11473C4-7ADA-4FD7-80F3-DA523635EA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F11473C4-7ADA-4FD7-80F3-DA523635EA91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22866474-E47C-4813-87A7-6EE70F69C47B}
+	EndGlobalSection
+EndGlobal
