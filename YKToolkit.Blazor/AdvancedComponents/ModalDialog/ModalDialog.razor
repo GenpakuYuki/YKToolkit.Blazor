@@ -1,0 +1,64 @@
+﻿@using System.Windows.Input
+@namespace YKToolkit.Blazor
+@inherits ModalDialogBase
+
+<div class="modal fade @_classShow" tabindex="-1" style="display: @_display; background-color: rgba(10, 10, 10, 0.8);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+            </div>
+            <div class="modal-body">
+                @if (this.Image == MessageBoxIcon.None)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-2">
+                                @switch (this.Image)
+                                {
+                                    case MessageBoxIcon.Information:
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#88a7e8" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img">
+                                            <title>Information</title>
+                                            <circle r="19" cx="20" cy="20" />
+                                            <path d="M 20 10 L 20 12 Z" style="stroke:white; stroke-width:4px;" />
+                                            <path d="M 20 18 L 20 30 Z" style="stroke:white; stroke-width:4px;" />
+                                        </svg>
+                                        break;
+
+                                    case MessageBoxIcon.Warning:
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#ffff44" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img">
+                                            <title>Warning</title>
+                                            <path d="M 20 0 L 0 40 L 40 40 Z" />
+                                            <path d="M 20 14 L 20 26 Z" style="stroke-width:4px;" />
+                                            <path d="M 20 32 L 20 34 Z" style="stroke-width:4px;" />
+                                        </svg>
+                                        break;
+
+                                    case MessageBoxIcon.Error:
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="Red" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img">
+                                            <title>Error</title>
+                                            <circle r="19" cx="20" cy="20" />
+                                            <path d="M 12 12 L 28 28 Z" style="stroke:white; stroke-width:4px;" />
+                                            <path d="M 28 12 L 12 28 Z" style="stroke:white; stroke-width:4px;" />
+                                        </svg>
+                                        break;
+                                }
+                            </div>
+                            <div class="col-10">
+                                @ChildContent
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="() => DialogResultCallback(false)">@CancelButtonCaption</button>
+                <button class="btn btn-primary" @onclick="() => DialogResultCallback(true)">@OkButtonCaption</button>
+            </div>
+        </div>
+    </div>
+</div>

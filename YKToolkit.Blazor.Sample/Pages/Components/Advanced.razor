@@ -5,3 +5,43 @@
 
 <h1>Advanced Components</h1>
 
+<h2>Dialog</h2>
+<div class="container-fluid mb-4">
+    <div class="row">
+        <div class="col-10">
+            <EditForm Model="DataContext">
+                <InputText class="form-control my-2" @bind-Value="DataContext.Message" placeholder="メッセージを入力してください。" />
+                <InputText class="form-control my-2" @bind-Value="DataContext.DialogTitle" placeholder="タイトルを入力してください。" />
+                <InputText class="form-control my-2" @bind-Value="DataContext.OkButtonCaption" placeholder="OK ボタンのキャプションを指定できます。" />
+                <InputText class="form-control my-2" @bind-Value="DataContext.CancelButtonCaption" placeholder="Cancel ボタンのキャプションを指定できます。" />
+            </EditForm>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 me-1">
+            <Button class="btn btn-primary" Command="DataContext.ShowMessageCommand">Message Dialog</Button>
+        </div>
+        <div class="col-2 me-1">
+            <Button class="btn btn-info" Command="DataContext.ShowInformationCommand">Information Dialog</Button>
+        </div>
+        <div class="col-2 me-1">
+            <Button class="btn btn-warning" Command="DataContext.ShowWarningCommand">Warning Dialog</Button>
+        </div>
+        <div class="col-2 me-1">
+            <Button class="btn btn-danger" Command="DataContext.ShowErrorCommand">Error Dialog</Button>
+        </div>
+        <div class="col-4">
+            @if (DataContext.DialogResult is not null)
+            {
+                @if (DataContext.DialogResult.Value)
+                {
+                    <p>OK を押しました。</p>
+                }
+                else
+                {
+                    <p>Cancel を押しました。</p>
+                }
+            }
+        </div>
+    </div>
+</div>
