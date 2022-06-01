@@ -17,6 +17,7 @@ builder.Services.AddScoped<ModalDialogBase, ModalDialog>();
 builder.Services.AddScoped<MainViewModel>();
 builder.Services.AddScoped<StandardComponentsViewModel>();
 builder.Services.AddScoped<AdvancedComponentsViewModel>();
+builder.Services.AddScoped<SampleDialogViewModel>();
 
 var app = builder.Build();
 

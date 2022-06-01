@@ -1,0 +1,7 @@
+﻿@inherits ViewComponentBase<SampleDialogViewModel>
+
+<h3>SampleDialog</h3>
+
+<p>@DataContext.Title</p>
+<Button class="btn btn-success" Command="DataContext.IncrementCommand">Increment</Button>
+<p>@DataContext.Count</p>

@@ -1,5 +1,6 @@
 ﻿@page "/Components/Advanced"
 @inherits ViewComponentBase<AdvancedComponentsViewModel>
+@inject IModalService modalService
 
 <PageTitle>YKToolkit.Blazor Sample</PageTitle>
 
@@ -30,6 +31,11 @@
         <div class="col-2 me-1">
             <Button class="btn btn-danger" Command="DataContext.ShowErrorCommand">Error Dialog</Button>
         </div>
+        <div class="col-2 me-1">
+            <Button class="btn btn-primary" Command="DataContext.ShowDialogCommand" CommandParameter="typeof(SampleDialog)">Sample Dialog</Button>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-4">
             @if (DataContext.DialogResult is not null)
             {

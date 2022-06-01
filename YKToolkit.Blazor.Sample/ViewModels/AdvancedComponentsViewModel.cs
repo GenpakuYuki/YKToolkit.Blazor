@@ -17,6 +17,7 @@ public class AdvancedComponentsViewModel : NotificationObject
         this.ShowInformationCommand = new DelegateCommand(_ => ShowInformation());
         this.ShowWarningCommand = new DelegateCommand(_ => ShowWarning());
         this.ShowErrorCommand = new DelegateCommand(_ => ShowError());
+        this.ShowDialogCommand = new DelegateCommand(p => ShowDialog((Type?)p));
     }
 
     /// <summary>
@@ -80,6 +81,17 @@ public class AdvancedComponentsViewModel : NotificationObject
     }
 
     /// <summary>
+    /// カスタムダイアログを表示します。
+    /// </summary>
+    /// <param name="type"></param>
+    private async void ShowDialog(Type? type)
+    {
+        if (type == null) return;
+
+        this.DialogResult = await this._modalService.ShowDialog(type);
+    }
+
+    /// <summary>
     /// メッセージダイアログ表示コマンドを取得します。
     /// </summary>
     public DelegateCommand ShowMessageCommand { get; private set; }
@@ -98,6 +110,11 @@ public class AdvancedComponentsViewModel : NotificationObject
     /// エラーダイアログ表示コマンドを取得します。
     /// </summary>
     public DelegateCommand ShowErrorCommand { get; private set; }
+
+    /// <summary>
+    /// カスタムダイアログ表示コマンドを取得します。
+    /// </summary>
+    public DelegateCommand ShowDialogCommand { get; private set; }
 
     /// <summary>
     /// ダイアログメッセージを取得または設定します。
