@@ -8,6 +8,13 @@ namespace YKToolkit.Blazor;
 public interface IModalService
 {
     /// <summary>
+    /// カスタムダイアログを表示します。
+    /// </summary>
+    /// <param name="contentType">コンテンツコンポーネントの型情報を指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    Task<bool> ShowDialog(Type contentType);
+
+    /// <summary>
     /// メッセージダイアログを表示します。
     /// </summary>
     /// <param name="message">メッセージを指定します。</param>
