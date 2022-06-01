@@ -88,7 +88,7 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (type == null) return;
 
-        this.DialogResult = await this._modalService.ShowDialog(type);
+        this.SampleDialogResult = await this._modalService.ShowDialog(type);
     }
 
     /// <summary>
@@ -149,6 +149,16 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         get => this._dialogResult;
         set => SetProperty(ref this._dialogResult, value);
+    }
+
+    private bool? _sampleDialogResult;
+    /// <summary>
+    /// カスタムダイアログ結果を取得または設定します。
+    /// </summary>
+    public bool? SampleDialogResult
+    {
+        get => this._sampleDialogResult;
+        set => SetProperty(ref this._sampleDialogResult, value);
     }
 
     /// <summary>

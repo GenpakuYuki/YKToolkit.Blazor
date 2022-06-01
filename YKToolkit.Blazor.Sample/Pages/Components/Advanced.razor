@@ -31,15 +31,36 @@
         <div class="col-2 me-1">
             <Button class="btn btn-danger" Command="DataContext.ShowErrorCommand">Error Dialog</Button>
         </div>
-        <div class="col-2 me-1">
-            <Button class="btn btn-primary" Command="DataContext.ShowDialogCommand" CommandParameter="typeof(SampleDialog)">Sample Dialog</Button>
-        </div>
     </div>
     <div class="row">
         <div class="col-4">
             @if (DataContext.DialogResult is not null)
             {
                 @if (DataContext.DialogResult.Value)
+                {
+                    <p>OK を押しました。</p>
+                }
+                else
+                {
+                    <p>Cancel を押しました。</p>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<h2>Custom Dialog</h2>
+<div class="container-fluid mb-4">
+    <div class="row">
+        <div class="col-2 me-1">
+            <Button class="btn btn-primary" Command="DataContext.ShowDialogCommand" CommandParameter="typeof(SampleDialog)">Sample Dialog</Button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            @if (DataContext.SampleDialogResult is not null)
+            {
+                @if (DataContext.SampleDialogResult.Value)
                 {
                     <p>OK を押しました。</p>
                 }
