@@ -1,0 +1,26 @@
+﻿
+@namespace YKToolkit.Blazor
+
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="@Fill" stroke="@Stroke" stroke-width="@StrokeThickness" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto" role="img">
+    <title>Warning</title>
+    <path d="M 20 0 L 0 40 L 40 40 Z" />
+    <path d="M 20 14 L 20 26 Z" style="stroke:@IconStroke; stroke-width:@IconStrokeThickness;" />
+    <path d="M 20 32 L 20 34 Z" style="stroke:@IconStroke; stroke-width:@IconStrokeThickness;" />
+</svg>
+
+@code {
+    [Parameter]
+    public string Fill { get; set; } = "#ffff44";
+
+    [Parameter]
+    public string Stroke { get; set; } = "black";
+
+    [Parameter]
+    public string StrokeThickness { get; set; } = "2";
+
+    [Parameter]
+    public string IconStroke { get; set; } = "black";
+
+    [Parameter]
+    public string IconStrokeThickness { get; set; } = "4px";
+}
