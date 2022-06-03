@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="YKToolkit.Blazor.Sample.styles.css" rel="stylesheet" />
+    <link href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/styles/atom-one-dark.min.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -29,5 +30,22 @@
 
     <script src="_framework/blazor.server.js"></script>
     <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
+    <script>
+        window.highlightSnippet = function() {
+	        // <pre><code>部を全部抜き出して
+            document.querySelectorAll('pre code').forEach((el) => {
+                // 行番号用のギミックを含めて
+                hljs.addPlugin({
+                    'after:highlightElement': ({ el, result}) => {
+                        el.innerHTML = result.value.replace(/^/gm,'<span class="row-number"></span>');
+                    }
+                });
+	            // ハイライトする
+                hljs.highlightElement(el);
+            });
+        }
+    </script>
+    <script>prettyPrint();</script>
 </body>
 </html>

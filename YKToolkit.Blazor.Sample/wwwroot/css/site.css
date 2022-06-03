@@ -151,3 +151,20 @@ a.dropdown-item {
         transform: scale(1.00);
         overflow: hidden;
     }
+
+
+pre {
+    counter-reset: rowNumber;
+}
+
+    pre span.row-number {
+        counter-increment: rowNumber;
+    }
+
+        pre span.row-number::before {
+            content: counter(rowNumber);
+            /* 以下少しだけ装飾 */
+            width: 2rem;
+            display: inline-block;
+            color: #aaa;
+        }
