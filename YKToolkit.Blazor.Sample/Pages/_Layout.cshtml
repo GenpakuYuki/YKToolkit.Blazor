@@ -30,6 +30,28 @@
 
     <script src="_framework/blazor.server.js"></script>
     <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var isFirst = true; // イベント登録は初回のみ
+        window.RegisterOnScrollEvent = function () {
+            var header = document.getElementById('common-header');
+            if (isFirst == true)
+            {
+                document.addEventListener("scroll", function() {
+                    console.log("hoge");
+                    var y = window.scrollY;
+                    if (y > 80)
+                    {
+                        header.classList.add("change-background");
+                    }
+                    else
+                    {
+                        header.classList.remove("change-background");
+                    }
+                });
+                isFirst = false;
+            }
+        };
+    </script>
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
     <script>
         window.highlightSnippet = function() {
