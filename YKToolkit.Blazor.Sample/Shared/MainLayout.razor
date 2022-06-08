@@ -3,68 +3,43 @@
 
 <PageTitle>YKToolkit.Blazor.Sample</PageTitle>
 
-<header id="common-header" class="site-header sticky-top py-1">
-  <nav class="navbar navbar-expand-lg">
+<ErrorBoundary @ref="_errorBoundary">
+  <ChildContent>
+    <Header />
+    @Body
+    <ModalDialog />
+    <Footer />
+  </ChildContent>
+  <ErrorContent>
     <div class="container-fluid">
-      <a class="py-2" href="/" aria-label="BlazorDeNWF">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img" viewBox="0 0 24 24"><title>YKSpares</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse mx-2" id="navbarNavDropdown">
-        <ul class="navbar-nav list-group list-group-horizontal">
-
-          <li class="nav-item">
-            <a class="nav-link" href="/">Top</a>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Tutorials
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/Tutorials/FirstStep">First Step</a></li>
-            </ul>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Components
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/Components/Standard">Standad</a></li>
-              <li><a class="dropdown-item" href="/Components/Advanced">Advanced</a></li>
-            </ul>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="/Blank">Blank</a>
-          </li>
-
-        </ul>
+      <div class="row">
+        <p>例外が発生しています [@context.GetType().ToString()]</p>
+        <p>@context.Message</p>
+        @if (context.StackTrace is not null)
+        {
+          @foreach (var line in context.StackTrace?.Split("at ", StringSplitOptions.RemoveEmptyEntries).ToList())
+          {
+            <p>@line</p>
+          }
+        }
+      </div>
+      <div class="row col-4 bt-4">
+        <button @onclick="() => OnResetButtonClick()">Reset</button>
       </div>
     </div>
-  </nav>
-</header>
-
-<ModalDialog />
-
-<div class="page mb-5">
-  <main>
-    <article class="content px-4">
-      @Body
-    </article>
-  </main>
-</div>
-
-<footer class="site-footer fixed-bottom py-1 text-center">
-  <p>&copy; 2022- YKSoftware. Coordinated by <a href="https://getbootstrap.com/">Bootstrap v5.1.3</a></p>
-</footer>
+  </ErrorContent>
+</ErrorBoundary>
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await JS.InvokeVoidAsync("RegisterOnScrollEvent");
-    }
+  private ErrorBoundary? _errorBoundary;
+
+  private void OnResetButtonClick()
+  {
+    this._errorBoundary?.Recover();
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await JS.InvokeVoidAsync("RegisterOnScrollEvent");
+  }
 }
