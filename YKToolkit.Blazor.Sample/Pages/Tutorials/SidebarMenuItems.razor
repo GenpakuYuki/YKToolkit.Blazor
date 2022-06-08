@@ -1,0 +1,37 @@
+﻿<nav class="sidebar bd-links col-3 position-sticky">
+  <ul class="list-unstyled mb-0 py-3 pt-md-1">
+    @foreach (var x in this._links)
+    {
+      <li class="mb-1">
+        <button class="btn d-inline-flex align-items-center rounded" data-bs-toggle="collapse" data-bs-target="@("#" + x.Item1.Replace(" ", "") + "-collapse")" aria-expanded="@(x.Item2.Any(y => this.CurrentPage == y.Item2) ? "true" : "false")">
+          @x.Item1
+        </button>
+
+        <div class="collapse show" id="@(x.Item1.Replace(" ", "") + "-collapse")">
+          <ul class="list-unstyled fw-normal pb-1 small">
+            @foreach (var y in x.Item2)
+            {
+              <li><a href="@y.Item1" class="d-inline-flex align-items-center rounded @(this.CurrentPage == y.Item2 ? "active" : "")" aria-current="page">@y.Item2</a></li>
+            }
+          </ul>
+        </div>
+      </li>
+    }
+  </ul>
+</nav>
+
+
+@code {
+  [Parameter]
+  public string? CurrentPage { get; set; }
+
+  private Tuple<string, Tuple<string, string>[]>[] _links = new Tuple<string, Tuple<string, string>[]>[]
+    {
+      new ("Getting started", new Tuple<string, string>[]
+      {
+        new ("/Tutorials/FirstStep", "Introductions"),
+        new ("/Tutorials/CreateNewProject", "Create new project"),
+        new ("c", "C"),
+      }),
+  };
+}
