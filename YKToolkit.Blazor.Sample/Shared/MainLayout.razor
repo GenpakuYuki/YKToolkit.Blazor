@@ -6,7 +6,11 @@
 <ErrorBoundary @ref="_errorBoundary">
   <ChildContent>
     <Header />
-    @Body
+    <main class="main-contents container-fluid mb-5">
+        <div class="row mt-2">
+          @Body
+        </div>
+    </main>
     <ModalDialog />
     <Footer />
   </ChildContent>

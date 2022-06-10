@@ -1,24 +1,36 @@
 ﻿@page "/Tutorials/CreateNewProject"
 
-<div class="container-fluid">
-  <div class="row">
 
-    <SidebarMenuItems CurrentPage="Create new project" />
+<SidebarMenuItems CurrentPage="Create new project" />
 
-    <main class="col ms-auto">
-      <div class="justify-content-between">
-        <h1>プロジェクトの新規作成</h1>
-        <p>Blazor Server アプリケーション開発のためのプロジェクトを作成します。</p>
+<div class="col ms-auto">
+  <div class="justify-content-between">
+    <h1>プロジェクトの新規作成</h1>
+    <p>Blazor Server アプリケーション開発のためのプロジェクトを作成します。</p>
 
-        <h2>Visual Studio のプロジェクト作成</h2>
-        <p>Visual Studio 2022 で「ファイル」→「新規作成」→「プロジェクト」を選択すると次のようなダイアログが表示されます。</p>
-        <img src="img/Tutorial/CreateNewProject/01_NewProject.png" />
-        <p>「Blazor Server アプリ」を選択して「次へ」を押します。</p>
-        <img src="img/Tutorial/CreateNewProject/02_ProjectName.png" />
-        <p>プロジェクト名とソリューションの保存先を指定します。プロジェクト名と異なるソリューション名にしたい場合はソリューション名も指定します。「次へ」を押して次へ進みます。</p>
-        <img src="img/Tutorial/CreateNewProject/03_Configurations.png" />
-        <p></p>
-      </div>
-    </main>
+    <h2>Visual Studio のプロジェクト作成</h2>
+
+    <p>Visual Studio 2022 で「ファイル」→「新規作成」→「プロジェクト」を選択すると次のようなダイアログが表示されます。</p>
+
+    <img src="img/Tutorial/CreateNewProject/01_NewProject.png" />
+    <p>「Blazor Server アプリ」を選択して「次へ」を押します。</p>
+
+    <img src="img/Tutorial/CreateNewProject/02_ProjectName.png" />
+    <p>プロジェクト名とソリューションの保存先を指定します。プロジェクト名と異なるソリューション名にしたい場合はソリューション名も指定します。「次へ」を押して次へ進みます。</p>
+
+    <img src="img/Tutorial/CreateNewProject/03_Configurations.png" />
+    <p>「フレームワーク」は現在最新の .NET6 を選択します。.NET7 がもうすぐリリース予定ですが、その次の .NET8 が長期サポートフレームワークとして計画されているので、移植タイミングは検討の余地があります。</p>
+    <p>「認証の種類」を設定することによって、ユーザ認証のための機能があらかじめ実装されるテンプレートが作成されます。ここでは認証のないシンプルなプロジェクトを作成したいので、「なし」を選択します。同様に「HTTPS 用の構成」のチェックも外しておきます。</p>
+    <p>「Docker を有効にする」を設定することで Docker コンテナ上のアプリとして開発できます。ここではチェックを外しておきます。</p>
+    <p>「最上位のステートメント」については特に使用不可の理由もありませんので、「Do not use top-level statements」のチェックは外しておきます。.NET6 以降では「最上位のステートメント」を使用することができます。C# のコードは namespace を書いて、class を書いて、その次にメソッドを定義して…というような記述作法が従来でしたが、.NET6 以降ではいきなり命令文、すなわちステートメントを書くことができます。これを最上位のステートメントと呼んでいます。詳しくは <a href="https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/tutorials/top-level-statements">Microsoft Docs のチュートリアル</a>をご参照ください。</p>
+
+    <p>最後に「作成」を押すと、Blazor server 開発のためのプロジェクトテンプレートが作成されます。こちらがそのときのプロジェクト構成になります。</p>
+    <img src="img/Tutorial/CreateNewProject/04_DefaultTree.png" />
+
+    <h2>テンプレートプロジェクトの実行</h2>
+    <p>詳しくは追々説明するとして、おもむろに F5 キーでも押して実行してみましょう。</p>
+    <img src="img/Tutorial/CreateNewProject/05_HelloWorld.png" />
+
+    <p>既定のブラウザが起動し、「Hello, world!」が表示されます。今回はここまで。</p>
   </div>
 </div>

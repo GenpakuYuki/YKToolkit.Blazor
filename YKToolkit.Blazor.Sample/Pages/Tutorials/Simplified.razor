@@ -1,0 +1,69 @@
+﻿@page "/Tutorials/Simplified"
+
+
+<SidebarMenuItems CurrentPage="Simplified" />
+
+<div class="col ms-auto">
+  <div class="justify-content-between">
+    <h1>テンプレートプロジェクトの簡素化</h1>
+    <p>前回は Blazor server アプリ開発のためのプロジェクトを新規作成しました。ここではこのデフォルトテンプレートで用意されたもので不要になる部分を思い切って削除していきます。</p>
+
+    <h2>サンプルページの削除</h2>
+
+    <p>デフォルトでは Counter というページと、Weather forecast というページが用意されています。データとの連携やボタン操作との連携に関するシンプルなサンプルです。アプリを開発する上では不要になるので、こちらを削除します。</p>
+    <p>Pages フォルダにある Counter.razor と FetchData.razor を削除します。FetchData.razor を削除することで、そこでしか使用していなかった Data/WeatherForecast.cs と Data/WeatherForecastService.cs も不要になるので削除します。WeatherForecastService は Program.cs で DI コンテナに登録していたので、こちらの行を削除します。</p>
+    <pre><code class="cs">using BlazorApp1.Data;    &lt;-- この行を削除
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddSingleton&lt;WeatherForecastService&gt;();    &lt;-- この行を削除
+</code></pre>
+    <p>builder.Services.AddSingleton 拡張メソッドを呼んでいるところだけでなく、using ディレクティブにも注意してください。Data フォルダが空になるため、もはや BlazorApp1.Data 名前空間が存在しなくなります。こちらもきちんと削除しておきましょう。</p>
+
+    <h2>サイドメニューの削除</h2>
+    <p>これからどんなページを作成するのかはさておき、デフォルトのサイドメニューはもはや不要なので削除します。Shared/NavMenu.razor がサイドメニューの本体です。思い切って削除しましょう。</p>
+    <p>NavMenu.razor は Shared/MainLayout.razor の中から参照されているので、こちらは編集する必要があります。MainLayout.razor はその他に不要なものがあるので、すっきりさせましょう。</p>
+
+    <p>デフォルトのままのコードがこちら。</p>
+    <pre><code class="cs">&#064;inherits LayoutComponentBase
+
+&lt;PageTitle&gt;BlazorApp1&lt;/PageTitle&gt;
+
+&lt;div class="page"&gt;
+    &lt;div class="sidebar"&gt;
+        &lt;NavMenu /&gt;
+    &lt;/div&gt;
+
+    &lt;main&gt;
+        &lt;div class="top-row px-4"&gt;
+            &lt;a&gt; href="https://docs.microsoft.com/aspnet/" target="_blank"&gt;About&lt;/a&gt;
+        &lt;/div&gt;
+
+        &lt;article class="content px-4"&gt;
+            &#064;Body
+        &lt;/article&gt;
+    &lt;/main&gt;
+&lt;/div&gt;
+</code></pre>
+
+    <p>ここをこうして…こうします。</p>
+    <pre><code class="cs">&#064;inherits LayoutComponentBase
+
+&lt;PageTitle&gt;BlazorApp1&lt;/PageTitle&gt;
+
+&#064;Body
+</code></pre>
+    <p>&#064;Body だけになりました。シンプル！</p>
+
+    <h2>MainLayout.razor に対する分離 css の削除</h2>
+    <p>Shared/MainLayout.razor をツリー上でよく見てみると子要素があります。ツリーを展開すると中から MainLayout.razor.css というファイルが出てきます。これは分離 css と呼ばれる Blazor の機能で、razor コンポーネントそれぞれに独自の css を適用することができます。こちらはひとまず不要になるので思い切ってファイルごと削除します。</p>
+    <p>実は Shared/NavMenu.razor にも分離 css NavMenu.razor.css ファイルがくっついていましたが、NavMenu.razor を削除したときに一緒に消えていると思います。もし残っている場合は削除しておきましょう。</p>
+
+
+  </div>
+</div>
