@@ -10,6 +10,15 @@
         "js/bootstrap.bundle.min.js",
         "js/bootstrap.bundle.min.js.map"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "highlight.js@11.5.1",
+      "destination": "wwwroot/lib/highlight.js/",
+      "files": [
+        "highlight.min.js",
+        "styles/base16/atelier-dune-light.min.css"
+      ]
     }
   ]
 }

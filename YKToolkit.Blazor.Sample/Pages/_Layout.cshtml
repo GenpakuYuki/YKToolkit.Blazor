@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="YKToolkit.Blazor.Sample.styles.css" rel="stylesheet" />
-    <link href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/styles/atom-one-dark.min.css" rel="stylesheet" />
+    @*<link href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/styles/atom-one-dark.min.css" rel="stylesheet" />*@
+    <link href="lib/highlight.js/styles/base16/atelier-dune-light.min.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -40,7 +41,7 @@
             }
         };
     </script>
-    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
+    <script src="lib/highlight.js/highlight.min.js"></script>
     <script>
         window.highlightSnippet = function() {
 	        // <pre><code>部を全部抜き出して
