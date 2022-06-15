@@ -1,5 +1,13 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+h1:focus {
+    outline: none;
+}
+
+h2, h3 {
+    margin-top: 1em;
+}
+
 /* ============================ */
 /* ヘッダそのもの */
 .site-header {
@@ -162,6 +170,13 @@ pre {
             display: inline-block;
             color: #aaa;
         }
+
+.card-code {
+    background-color: rgba(0, 122, 204, .85);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    color: #fff;
+}
 
 /* ============================ */
 /* サイドメニュー */
