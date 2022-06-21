@@ -21,7 +21,7 @@
         <p>@context.Message</p>
         @if (context.StackTrace is not null)
         {
-          @foreach (var line in context.StackTrace?.Split("at ", StringSplitOptions.RemoveEmptyEntries).ToList())
+          @foreach (var line in context.StackTrace.Split("at ", StringSplitOptions.RemoveEmptyEntries).ToList())
           {
             <p>@line</p>
           }
