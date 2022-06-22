@@ -136,7 +136,7 @@ h2, h3 {
     width: 250px;
     height: calc(100vh - 80px - 44px); /* マージンを含むヘッダとフッタの高さ分を差し引く */
     position: sticky;
-    top: 80px; /* マージンを含むフッタの高さ分を指定する */
+    top: 80px; /* マージンを含むヘッダの高さ分を指定する */
     margin-bottom: 50px;
     overflow: auto;
 }
