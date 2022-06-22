@@ -3,7 +3,7 @@
 
 <SidebarMenuItems CurrentPage="Simplified" />
 
-<div class="col ms-auto">
+<div class="col-9 ms-auto">
   <div class="justify-content-between">
     <h1>テンプレートプロジェクトの簡素化</h1>
     <p>前回は Blazor server アプリ開発のためのプロジェクトを新規作成しました。ここではこのデフォルトテンプレートで用意されたもので不要になる部分を思い切って削除していきます。</p>
@@ -315,7 +315,7 @@ h1:focus {
 
     <p>blazor-error-ui は例外が発生したときにこれをお知らせするために用意されているテンプレートに対する設定で、本体は _Layout.cshtml 内に記述があります。ここも独自にアレンジしても良いですが、今回はデフォルトのまま利用します。</p>
     <p>ところで、ErrorBoundary コンポーネントというものがあります。これは .NET6 から導入されたコンポーネントで、これで挟んだもののレンダリングで例外が発生したときに、その例外を捕捉して ErrorContent に指定した内容をレンダリングするようになる、いわば try-catch のようなものです。これを使って MainLayout.razor でレンダリングされるものすべてについて未処理例外を捕捉するようにします。</p>
-    
+
     <div class="row">
         <div class="col-6">
           <div class="card card-code">
