@@ -5,9 +5,95 @@
 
 <div class="col-9">
 <h3>ViewComponentBase&lt;T&gt; Class</h3>
-<p>ViewComponentBase&lt;T&gt; クラスはジェネリッククラスですが、INotifyPropertyChanged インターフェースを実装したクラスを指定することで INotifyPropertyChanged.PropertyChanged イベントを自動的に購読し、イベント発生時に再レンダリングをおこないます。</p>
+<p>ViewComponentBase&lt;T&gt; クラスはジェネリッククラスですが、INotifyPropertyChanged インターフェースを実装したクラスを指定することで INotifyPropertyChanged.PropertyChanged イベントを自動的に購読し、イベント発生時に再レンダリングをおこないます。具体的な実装例を見ていきましょう。</p>
+<p>例えばデフォルトテンプレートで用意される Counter.razor というファイルは Counter ページを表し、以下のようなソースコードになっていました。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">Counter.razor（修正前）</div>
+    <div class="card-text">
+        <pre><code class="cs">&#064;page "/counter"
+
+&lt;PageTitle&gt;Counter&lt;/PageTitle&gt;
+
+&lt;h1&gt;Counter&lt;/h1&gt;
+
+&lt;p role="status"&gt;Current count: &#064;currentCount&lt;/p&gt;
+
+&lt;button class="btn btn-primary" &#064;onclick="IncrementCount"&gt;Click me&lt;/button&gt;
+
+&#064;code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}</code></pre>
+    </div>
 </div>
 
-@code {
+<p>前半に HTML タグ、後半に C# コードが書かれていて一見わかりやすく書いているかのように見えますが、よく見るとボタンを押したときの処理が一緒に書かれていたり、その処理の過程で変化するデータそのものまでが混在しています。この変数をアプリケーションの状態とみなすと、これは Model 層にあるべきデータであるかもしれません。</p>
+<p>これを ViewComponentBase&lt;T&gt; クラスを使うと以下のように書き換えることができます。</p>
 
-}
+<div class="row">
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">Counter.razor（修正後）</div>
+            <div class="card-text">
+                <pre><code class="cshtml">&#064;page "/counter"
+&#064;inherits ViewComponentBase&lt;CounterViewModel&gt;
+
+&lt;PageTitle&gt;Counter&lt;/PageTitle&gt;
+
+&lt;h1&gt;Counter&lt;/h1&gt;
+
+&lt;p role="status"&gt;Current count: &#064;DataContext.CurrentCount&lt;/p&gt;
+
+&lt;button class="btn btn-primary" &#064;onclick="DataContext.IncrementCount"&gt;Click me&lt;/button&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">Program.cs（追加）</div>
+            <div class="card-text">
+                <pre><code class="cs">var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+// ViewModel の追加
+builder.Services.AddScoped&lt;CounterViewModel&gt;();
+
+// 省略</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>ViewComponentBase に指定したデータ型のインスタンスはコンストラクタインジェクションによって DataContext プロパティに埋め込まれるようになっています。このため、元々あった currentCount フィールドは例えば CounterViewModel クラスが持つ CurrentCount プロパティとすることで上記のようなデータバインディングが可能になります。また、button の onclick で実行するメソッドも DataContext プロパティを通して ViewModel が持つメソッドを指定できるようになります。</p>
+<p>上記の例では ViewModel のスコープを AddScoped&lt;T&gt; メソッドで指定していますが、AddSingleton&lt;T&gt; メソッドで指定するなど、ケースバイケースで決定してください。</p>
+<p>ViewModel 側は INotifyPropertyChanged インターフェースを実装する必要があるため、WPF と同様に以下のような実装になります。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">CounterViewModel.cs</div>
+    <div class="card-text">
+        <pre><code class="cs">namespace BlazorApp1.ViewModels
+{
+    public class CounterViewModel : NotificationObject
+    {
+        private int _currentCount;
+        public int CurrentCount
+        {
+            get => this._currentCount;
+            set => SetProperty(ref this._currentCount, value);
+        }
+    }
+}</code></pre>
+    </div>
+</div>
+
+<p>ただし、NotificationObject クラスは INotifyPropertyChanged インターフェースを実装する抽象クラスです。また、SetProperty() メソッドはこの抽象クラスが持つメソッドです。詳細は次節で説明します。</p>
+</div>
