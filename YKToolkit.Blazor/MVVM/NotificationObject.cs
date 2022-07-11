@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 /// <summary>
 /// System.ComponentModel.INotifyPropertyChanged インターフェースを実装したプロパティ変更通知機能を提供します。
 /// </summary>
-public class NotificationObject : INotifyPropertyChanged
+public abstract class NotificationObject : INotifyPropertyChanged
 {
     /// <summary>
     /// プロパティが変更されたときに発生します。
