@@ -1,0 +1,107 @@
+﻿@page "/Tutorials/NotificationObject"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="NotificationObject" />
+
+<div class="col-9">
+<h3>NotificationObject Class</h3>
+<p>INotifyPropertyChanged インターフェースを実装した抽象クラスです。通常はこのクラスの派生クラスとして ViewModel のクラスを作成します。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">NotificationObject.cs</div>
+    <div class="card-text">
+        <pre><code class="cs">using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+/// &lt;summary&gt;
+/// INotifyPropertyChanged インターフェースを実装した抽象クラスを表します。
+/// &lt;/summary&gt;
+public abstract class NotificationObject : INotifyPropertyChanged
+{
+    /// &lt;summary&gt;
+    /// プロパティが変更されたときに発生します。
+    /// &lt;/summary&gt;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// &lt;summary&gt;
+    /// PropertyChanged イベントを発行します。
+    /// &lt;/summary&gt;
+    /// &lt;param name="propertyName"&gt;プロパティ値が変更されたプロパティ名を指定します。&lt;/param&gt;
+    protected void RaisePropertyChanged([CallerMemberName]string? propertyName = null) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    /// &lt;summary&gt;
+    /// プロパティ値変更用ヘルパです。
+    /// &lt;/summary&gt;
+    /// &lt;param name="target"&gt;対象とするプロパティの実体を指定します。&lt;/param&gt;
+    /// &lt;param name="value"&gt;変更後の値を指定します。&lt;/param&gt;
+    /// &lt;param name="propertyName"&gt;プロパティ名を指定します。&lt;/param&gt;
+    /// &lt;typeparam name="T"&gt;プロパティの型を表します。&lt;/typeparam&gt;
+    /// &lt;returns&gt;プロパティ値に変更があった場合に true を返します。&lt;/returns&gt;
+    protected bool SetProperty&lt;T&gt;(ref T target, T value, [CallerMemberName]string? propertyName = null)
+    {
+        if (EqualityComparer&lt;T&gt;.Default.Equals(target, value))
+            return false;
+        target = value;
+        RaisePropertyChanged(propertyName);
+        return true;
+    }
+}</code></pre>
+    </div>
+</div>
+
+<p>PropertyChanged イベントを発行することで参照される上位モジュールに対してプロパティ値が変更したことを通知します。ViewComponentBase&lt;T&gt; クラスはデフォルトで PropertyChanged イベントを購読しています。</p>
+<p>NotificationObject クラスの派生クラスでは、プロパティ値が変更される度に、必要に応じて PropertyChanged イベントを発行します。イベント発行には RaisePropertyChanged() メソッドを使用します。入力引数に値が変更されたプロパティの名前を指定します。該当するプロパティの setter からこのメソッドを呼び出す場合、入力引数を省略できます。</p>
+<p>RaisePropertyChanged() メソッドは PropertyChanged イベントを発行しますが、プロパティ値が変更されない場合はこれを呼び出す必要はありません。したがって、常にプロパティ値が変更されたかどうかを評価する必要があります。変更の有無を評価する処理を含めて PropertyChanged イベントを発行するヘルパメソッドとして SetProeprty&lt;T&gt;() メソッドが便利です。プロパティ値の変更の有無にかかわらず、常にプロパティの setter で SetProeprty&lt;T&gt;() を使用することで、プロパティ値の変更と PropertyChanged イベントの発行を自動的におこないます。</p>
+<p>SetProperty&lt;T&gt;() メソッド内でプロパティ値変更の有無を評価するために EqualityComparer&lt;T&gt; クラスを使用しています。通常の等値比較演算ではデータを object にボックス化してしまいます。EqualityComparer&lt;T&gt; クラスを使用することでボックス化そのものの発生を回避しています。</p>
+<p>以下のコードは NotificationObject クラスを基本クラスとした MainViewModel クラスのサンプルコードです。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">MainViewModel.cs</div>
+    <div class="card-text">
+        <pre><code class="cs">namespace BlazorApp1.ViewModels
+{
+    public class MainViewModel : NotificationObject
+    {
+        private int _age;
+        public int Age
+        {
+            get => this._age;
+            set => SetProperty(ref this._age, value);
+        }
+
+        private string _lastName = string.Empty;
+        public string LastName
+        {
+            get => this._lastName;
+            set
+            {
+                if (SetProperty(ref this._lastName, value))
+                {
+                    RaisePropertyChanged(nameof(this.FullName));
+                }
+            }
+        }
+
+        private string _firstName = string.Empty;
+        public string FirstName
+        {
+            get => this._firstName;
+            set
+            {
+                if (SetProperty(ref this._firstName, value))
+                {
+                    RaisePropertyChanged(nameof(this.FullName));
+                }
+            }
+        }
+
+        public string FullName { get => $"{this.FirstName} {this.LastName}"; }
+    }
+}</code></pre>
+    </div>
+</div>
+
+<p>Age プロパティの setter で実体である _age フィールドを SetProeprty&lt;T&gt;() メソッドの第一引数として指定しています。プロパティの setter から直接呼び出しているため、第三引数は省略しています。</p>
+<p>LastName プロパティおよび FirstName プロパティは自身のプロパティ値に変更があった場合、FullName プロパティにもその変更が影響するため、SetProperty&lt;T&gt;() メソッドの戻り値を見て FullName プロパティの変更イベントも発行しています。</p>
+
+</div>
