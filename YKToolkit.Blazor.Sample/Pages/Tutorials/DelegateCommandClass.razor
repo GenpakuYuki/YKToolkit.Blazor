@@ -1,0 +1,117 @@
+﻿@page "/Tutorials/DelegateCommand"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="DelegateCommand class" />
+
+<div class="col-9">
+<h3>DelegateCommand Class</h3>
+<p>ICommand インターフェースを実装したクラスです。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">DelegateCommand.cs</div>
+    <div class="card-text">
+        <pre><code class="cs">using System.Windows.Input;
+
+/// &lt;summary&gt;
+/// System.Windows.Input.ICommand インターフェースを実装したコマンド機能を提供します。
+/// &lt;/summary&gt;
+public class DelegateCommand : ICommand
+{
+    /// &lt;summary&gt;
+    /// 新しいインスタンスを生成します。
+    /// &lt;/summary&gt;
+    /// &lt;param name="execute">コマンド実行のデリゲートを指定します。&lt;/param&gt;
+    public DelegateCommand(Action&lt;object?&gt; execute)
+        : this(execute, null)
+    {
+    }
+
+    /// &lt;summary&gt;
+    /// 新しいインスタンスを生成します。
+    /// &lt;/summary&gt;
+    /// &lt;param name="execute"&gt;コマンド実行のデリゲートを指定します。&lt;/param&gt;
+    /// &lt;param name="canExecute"&gt;コマンド実行可能判別のデリゲートを指定します。&lt;/param&gt;
+    public DelegateCommand(Action&lt;object?&gt; execute, Func&lt;object?, bool&gt;? canExecute)
+    {
+        this._execute = execute;
+        this._canExecute = canExecute;
+    }
+
+    /// &lt;summary&gt;
+    /// コマンド実行可能判別条件が変更されたときに発生します。
+    /// &lt;/summary&gt;
+    public event EventHandler? CanExecuteChanged;
+
+    /// &lt;summary&gt;
+    /// CanExecuteChanged イベントを発行します。
+    /// &lt;/summary&gt;
+    public void RaiseCanExecuteChanged() => this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+    /// &lt;summary&gt;
+    /// コマンドが実行可能かどうかを判別します。
+    /// &lt;/summary&gt;
+    /// &lt;param name="parameter"&gt;コマンドに対するパラメータを指定します。&lt;/param&gt;
+    /// &lt;returns&gt;コマンドが実行可能な場合に true を返します。&lt;/returns&gt;
+    public bool CanExecute(object? parameter) => this._canExecute?.Invoke(parameter) ?? true;
+
+    /// &lt;summary&gt;
+    /// コマンドを実行します。
+    /// &lt;/summary&gt;
+    /// &lt;param name="parameter"&gt;コマンドに対するパラメータを指定します。&lt;/param&gt;
+    public void Execute(object? parameter) => this._execute.Invoke(parameter);
+
+    /// &lt;summary>
+    /// コマンド実行のデリゲート
+    /// &lt;/summary>
+    private Action&lt;object?&gt; _execute;
+
+    /// &lt;summary&gt;
+    /// コマンド実行可能判定のデリゲート
+    /// &lt;/summary&gt;
+    private Func&lt;object?, bool&gt;? _canExecute;
+}</code></pre>
+    </div>
+</div>
+
+<p>以下のコードは DelegateCommand クラスを使用したサンプルコードです。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">MainViewModel.cs</div>
+    <div class="card-text">
+        <pre><code class="cs">namespace YKToolkit.Blazor.Sample.ViewModels
+{
+    public class MainViewModel : NotificationObject
+    {
+        public MainViewModel()
+        {
+            this.TestCommand = new DelegateCommand(_ => Test(), _ => this.IsBusy == false);
+        }
+
+        private void Test()
+        {
+            // 何か処理
+        }
+
+        public DelegateCommand TestCommand { get; private set; }
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => this._isBusy;
+            set
+            {
+                if (SetProperty(ref this._isBusy, value))
+                {
+                    this.TestCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+    }
+}</code></pre>
+    </div>
+</div>
+
+<p>TestCommand プロパティは ICommand インターフェースを通して Test() メソッドを実行するためのプロパティです。実行可否判定として IsBusy プロパティの値を参照しています。このため、IsBusy プロパティの setter では RaiseCanExecuteChanged() メソッドを呼び出すことで TestCommand プロパティの実行可否判定条件が変更したことを明示的に通知するようにしています。</p>
+<p>View から ViewModel のメソッドを直接呼び出すことができなかった WPF と違い、Blazor では ViewComponentBase&lt;T&gt; が持つ DataContext プロパティを通して View から ViewModel のメソッドを直接呼び出すことができるため、ICommand インターフェースによるコマンドの提供は少し冗長なところがあります。一方で、ICommand インターフェースが提供する CanExecute() メソッドではそのコマンドの実行可否を判定します。YKToolkit.Blazor ライブラリが提供している Button コンポーネントなどは、この実行可否判定の結果によってコンポーネントの操作を無効化する機能を実装しています。</p>
+
+</div>
