@@ -38,14 +38,14 @@ public class DelegateCommand : ICommand
     /// <summary>
     /// コマンドが実行可能かどうかを判別します。
     /// </summary>
-    /// <param name="parameter"></param>
-    /// <returns></returns>
+    /// <param name="parameter">コマンドに対するパラメータを指定します。</param>
+    /// <returns>コマンドが実行可能な場合に true を返します。</returns>
     public bool CanExecute(object? parameter) => this._canExecute?.Invoke(parameter) ?? true;
 
     /// <summary>
     /// コマンドを実行します。
     /// </summary>
-    /// <param name="parameter"></param>
+    /// <param name="parameter">コマンドに対するパラメータを指定します。</param>
     public void Execute(object? parameter) => this._execute.Invoke(parameter);
 
     /// <summary>
