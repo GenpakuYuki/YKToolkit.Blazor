@@ -38,6 +38,18 @@ public abstract class ModalDialogBase : ComponentBase
     public string CancelButtonCaption { get; set; } = "Cancel";
 
     /// <summary>
+    /// Yes ボタンのキャプションを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public string YesButtonCaption { get; set; } = "Yes";
+
+    /// <summary>
+    /// No ボタンのキャプションを取得または設定します。
+    /// </summary>
+    [Parameter]
+    public string NoButtonCaption { get; set; } = "No";
+
+    /// <summary>
     /// ダイアログアイコンの種別を取得または設定します。
     /// </summary>
     [Parameter]
@@ -47,7 +59,12 @@ public abstract class ModalDialogBase : ComponentBase
     /// ダイアログの結果を取得または設定します。
     /// </summary>
     [Parameter]
-    public bool? DialogResult { get; set; }
+    public MessageBoxResult DialogResult { get; set; }
+
+    protected bool _isOkButtonVisibled;
+    protected bool _isCancelButtonVisibled;
+    protected bool _isYesButtonVisibled;
+    protected bool _isNoButtonVisibled;
 
     protected string _display = "none";
     protected string _classShow = "";
@@ -69,21 +86,121 @@ public abstract class ModalDialogBase : ComponentBase
     /// <param name="content">ダイアログコンテンツを指定します。</param>
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <param name="image">ダイアログアイコンを指定します。</param>
+    /// <param name="button">ダイアログに表示するボタンのパターンを指定します。</param>
     /// <param name="captions">ボタンキャプションを指定します。</param>
     /// <returns>ダイアログオブジェクトを返すタスク。</returns>
-    /// <exception cref="InvalidOperationException">ボタンキャプションの長さは 2 以上必要です。</exception>
-    public async Task<ModalDialogBase> ShowDialog(RenderFragment content, string? title, MessageBoxIcon image, string?[] captions)
+    public async Task<ModalDialogBase> ShowDialog(RenderFragment content, string? title, MessageBoxIcon image, MessageBoxButton button, string?[] captions)
     {
-        if (captions.Length < 2) throw new InvalidOperationException(nameof(captions));
+        // ToDo: captions の Length が足りない場合はデフォルトの文字列を表示するようにすることで
+        //       例外が発生しない柔軟なメソッドにする
 
-        this.DialogResult = null;
+        this.DialogResult = MessageBoxResult.Undefined;
         this.ChildContent = content;
         this.Title = title;
         this.Image = image;
-        var ok = captions[0] ?? "OK";
-        var cancel = captions[1] ?? "Cancel";
-        this.OkButtonCaption = string.IsNullOrEmpty(ok) ? "OK" : ok;
-        this.CancelButtonCaption = string.IsNullOrEmpty(cancel) ? "Cancel" : cancel;
+
+        switch (button)
+        {
+            case MessageBoxButton.Ok:
+                if ((captions is null) || (captions.Length == 0))
+                {
+                    this.OkButtonCaption = OkButtonCaptionDefault;
+                }
+                else
+                {
+                    this.OkButtonCaption = captions[0] ?? OkButtonCaptionDefault;
+                }
+
+                this._isOkButtonVisibled = true;
+                this._isCancelButtonVisibled = false;
+                this._isYesButtonVisibled = false;
+                this._isNoButtonVisibled = false;
+                break;
+
+            case MessageBoxButton.OkCancel:
+                if ((captions is null) || (captions.Length == 0))
+                {
+                    this.OkButtonCaption = OkButtonCaptionDefault;
+                }
+                else
+                {
+                    this.OkButtonCaption = captions[0] ?? OkButtonCaptionDefault;
+                }
+
+                if ((captions is null) || (captions.Length < 2))
+                {
+                    this.CancelButtonCaption = CancelButtonCaptionDefault;
+                }
+                else
+                {
+                    this.CancelButtonCaption = captions[1] ?? CancelButtonCaptionDefault;
+                }
+
+                this._isOkButtonVisibled = true;
+                this._isCancelButtonVisibled = true;
+                this._isYesButtonVisibled = false;
+                this._isNoButtonVisibled = false;
+                break;
+
+            case MessageBoxButton.YesNo:
+                if ((captions is null) || (captions.Length == 0))
+                {
+                    this.YesButtonCaption = YesButtonCaptionDefault;
+                }
+                else
+                {
+                    this.YesButtonCaption = captions[0] ?? YesButtonCaptionDefault;
+                }
+
+                if ((captions is null) || (captions.Length < 2))
+                {
+                    this.NoButtonCaption = NoButtonCaptionDefault;
+                }
+                else
+                {
+                    this.NoButtonCaption = captions[1] ?? NoButtonCaptionDefault;
+                }
+
+                this._isOkButtonVisibled = false;
+                this._isCancelButtonVisibled = false;
+                this._isYesButtonVisibled = true;
+                this._isNoButtonVisibled = true;
+                break;
+
+            case MessageBoxButton.YesNoCancel:
+                if ((captions is null) || (captions.Length == 0))
+                {
+                    this.YesButtonCaption = YesButtonCaptionDefault;
+                }
+                else
+                {
+                    this.YesButtonCaption = captions[0] ?? YesButtonCaptionDefault;
+                }
+
+                if ((captions is null) || (captions.Length < 2))
+                {
+                    this.NoButtonCaption = NoButtonCaptionDefault;
+                }
+                else
+                {
+                    this.NoButtonCaption = captions[1] ?? NoButtonCaptionDefault;
+                }
+
+                if ((captions is null) || (captions.Length < 3))
+                {
+                    this.CancelButtonCaption = CancelButtonCaptionDefault;
+                }
+                else
+                {
+                    this.CancelButtonCaption = captions[2] ?? CancelButtonCaptionDefault;
+                }
+
+                this._isOkButtonVisibled = false;
+                this._isCancelButtonVisibled = true;
+                this._isYesButtonVisibled = true;
+                this._isNoButtonVisibled = true;
+                break;
+        }
 
         this._display = "block";
         await Task.Delay(50);
@@ -110,9 +227,14 @@ public abstract class ModalDialogBase : ComponentBase
     /// </summary>
     /// <param name="result">ダイアログ結果を指定します。</param>
     /// <returns>戻り値のないタスク。</returns>
-    protected async Task DialogResultCallback(bool result)
+    protected async Task DialogResultCallback(MessageBoxResult result)
     {
         await HideDialog();
         this.DialogResult = result;
     }
+
+    private const string OkButtonCaptionDefault = "OK";
+    private const string CancelButtonCaptionDefault = "Cancel";
+    private const string YesButtonCaptionDefault = "Yes";
+    private const string NoButtonCaptionDefault = "No";
 }

@@ -41,8 +41,22 @@
                 }
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" @onclick="() => DialogResultCallback(false)">@CancelButtonCaption</button>
-                <button class="btn btn-primary" @onclick="() => DialogResultCallback(true)">@OkButtonCaption</button>
+                @if (_isCancelButtonVisibled)
+                {
+                    <button class="btn btn-secondary" @onclick="() => DialogResultCallback(MessageBoxResult.Cancel)">@CancelButtonCaption</button>
+                }
+                @if (_isOkButtonVisibled)
+                {
+                    <button class="btn btn-primary" @onclick="() => DialogResultCallback(MessageBoxResult.Ok)">@OkButtonCaption</button>
+                }
+                @if (_isNoButtonVisibled)
+                {
+                    <button class="btn btn-danger" @onclick="() => DialogResultCallback(MessageBoxResult.No)">@NoButtonCaption</button>
+                }
+                @if (_isYesButtonVisibled)
+                {
+                    <button class="btn btn-primary" @onclick="() => DialogResultCallback(MessageBoxResult.Yes)">@YesButtonCaption</button>
+                }
             </div>
         </div>
     </div>

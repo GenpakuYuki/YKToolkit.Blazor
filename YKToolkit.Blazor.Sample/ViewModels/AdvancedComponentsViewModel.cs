@@ -141,21 +141,21 @@ public class AdvancedComponentsViewModel : NotificationObject
     /// </summary>
     private string?[] ButtonCaptions { get => new string?[] { this.OkButtonCaption, this.CancelButtonCaption }; }
 
-    private bool? _dialogResult;
+    private MessageBoxResult _dialogResult;
     /// <summary>
     /// ダイアログ結果を取得または設定します。
     /// </summary>
-    public bool? DialogResult
+    public MessageBoxResult DialogResult
     {
         get => this._dialogResult;
         set => SetProperty(ref this._dialogResult, value);
     }
 
-    private bool? _sampleDialogResult;
+    private MessageBoxResult _sampleDialogResult;
     /// <summary>
     /// カスタムダイアログ結果を取得または設定します。
     /// </summary>
-    public bool? SampleDialogResult
+    public MessageBoxResult SampleDialogResult
     {
         get => this._sampleDialogResult;
         set => SetProperty(ref this._sampleDialogResult, value);

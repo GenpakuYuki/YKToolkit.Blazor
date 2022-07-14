@@ -49,16 +49,9 @@
     </div>
     <div class="row">
         <div class="col-4">
-            @if (DataContext.DialogResult is not null)
+            @if (DataContext.DialogResult != MessageBoxResult.Undefined)
             {
-                @if (DataContext.DialogResult.Value)
-                {
-                    <p>OK を押しました。</p>
-                }
-                else
-                {
-                    <p>Cancel を押しました。</p>
-                }
+                <p>@DataContext.DialogResult を押しました。</p>
             }
         </div>
     </div>
@@ -73,16 +66,9 @@
     </div>
     <div class="row">
         <div class="col-4">
-            @if (DataContext.SampleDialogResult is not null)
+            @if (DataContext.SampleDialogResult != MessageBoxResult.Undefined)
             {
-                @if (DataContext.SampleDialogResult.Value)
-                {
-                    <p>OK を押しました。</p>
-                }
-                else
-                {
-                    <p>Cancel を押しました。</p>
-                }
+                <p>@DataContext.SampleDialogResult を押しました。</p>
             }
         </div>
     </div>

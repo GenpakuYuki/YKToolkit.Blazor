@@ -12,14 +12,14 @@ public class ModalService : IModalService
     /// </summary>
     /// <param name="contentType">コンテンツコンポーネントの型情報を指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowDialog(Type contentType)
+    public Task<MessageBoxResult> ShowDialog(Type contentType)
     {
         var content = new RenderFragment(x =>
         {
             x.OpenComponent(1, contentType);
             x.CloseComponent();
         });
-        return ShowDialog(content, "", MessageBoxIcon.None, null);
+        return ShowDialog(content, "", MessageBoxIcon.None, MessageBoxButton.OkCancel, null);
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class ModalService : IModalService
     /// </summary>
     /// <param name="message">メッセージを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowDialog(string message)
+    public Task<MessageBoxResult> ShowDialog(string message)
     {
         return ShowDialog(message, "");
     }
@@ -38,9 +38,21 @@ public class ModalService : IModalService
     /// <param name="message">メッセージを指定します。</param>
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowDialog(string message, string? title)
+    public Task<MessageBoxResult> ShowDialog(string message, string? title)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, null);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, MessageBoxButton.OkCancel, null);
+    }
+
+    /// <summary>
+    /// メッセージダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowDialog(string message, string? title, MessageBoxButton button)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, button, null);
     }
 
     /// <summary>
@@ -50,9 +62,22 @@ public class ModalService : IModalService
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowDialog(string message, string? title, string?[]? buttonCaptions)
+    public Task<MessageBoxResult> ShowDialog(string message, string? title, string?[]? buttonCaptions)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, buttonCaptions);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, MessageBoxButton.OkCancel, buttonCaptions);
+    }
+
+    /// <summary>
+    /// メッセージダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowDialog(string message, string? title, MessageBoxButton button, string?[]? buttonCaptions)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.None, button, buttonCaptions);
     }
 
     /// <summary>
@@ -60,7 +85,7 @@ public class ModalService : IModalService
     /// </summary>
     /// <param name="message">メッセージを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowInformationDialog(string message)
+    public Task<MessageBoxResult> ShowInformationDialog(string message)
     {
         return ShowInformationDialog(message, "情報");
     }
@@ -71,9 +96,21 @@ public class ModalService : IModalService
     /// <param name="message">メッセージを指定します。</param>
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowInformationDialog(string message, string? title)
+    public Task<MessageBoxResult> ShowInformationDialog(string message, string? title)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, null);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, MessageBoxButton.OkCancel, null);
+    }
+
+    /// <summary>
+    /// インフォメーションダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowInformationDialog(string message, string? title, MessageBoxButton button)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, button, null);
     }
 
     /// <summary>
@@ -83,9 +120,22 @@ public class ModalService : IModalService
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowInformationDialog(string message, string? title, string?[]? buttonCaptions)
+    public Task<MessageBoxResult> ShowInformationDialog(string message, string? title, string?[]? buttonCaptions)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, buttonCaptions);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, MessageBoxButton.OkCancel, buttonCaptions);
+    }
+
+    /// <summary>
+    /// インフォメーションダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowInformationDialog(string message, string? title, MessageBoxButton button, string?[]? buttonCaptions)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Information, button, buttonCaptions);
     }
 
     /// <summary>
@@ -93,7 +143,7 @@ public class ModalService : IModalService
     /// </summary>
     /// <param name="message">メッセージを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowWarningDialog(string message)
+    public Task<MessageBoxResult> ShowWarningDialog(string message)
     {
         return ShowWarningDialog(message, "警告");
     }
@@ -104,9 +154,21 @@ public class ModalService : IModalService
     /// <param name="message">メッセージを指定します。</param>
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowWarningDialog(string message, string? title)
+    public Task<MessageBoxResult> ShowWarningDialog(string message, string? title)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, null);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, MessageBoxButton.OkCancel, null);
+    }
+
+    /// <summary>
+    /// 警告ダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowWarningDialog(string message, string? title, MessageBoxButton button)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, button, null);
     }
 
     /// <summary>
@@ -116,9 +178,22 @@ public class ModalService : IModalService
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowWarningDialog(string message, string? title, string?[]? buttonCaptions)
+    public Task<MessageBoxResult> ShowWarningDialog(string message, string? title, string?[]? buttonCaptions)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, buttonCaptions);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, MessageBoxButton.OkCancel, buttonCaptions);
+    }
+
+    /// <summary>
+    /// 警告ダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowWarningDialog(string message, string? title, MessageBoxButton button, string?[]? buttonCaptions)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Warning, button, buttonCaptions);
     }
 
     /// <summary>
@@ -126,7 +201,7 @@ public class ModalService : IModalService
     /// </summary>
     /// <param name="message">メッセージを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowErrorDialog(string message)
+    public Task<MessageBoxResult> ShowErrorDialog(string message)
     {
         return ShowErrorDialog(message, "エラー");
     }
@@ -137,9 +212,21 @@ public class ModalService : IModalService
     /// <param name="message">メッセージを指定します。</param>
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowErrorDialog(string message, string? title)
+    public Task<MessageBoxResult> ShowErrorDialog(string message, string? title)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, null);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, MessageBoxButton.OkCancel, null);
+    }
+
+    /// <summary>
+    /// エラーダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowErrorDialog(string message, string? title, MessageBoxButton button)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, button, null);
     }
 
     /// <summary>
@@ -149,9 +236,22 @@ public class ModalService : IModalService
     /// <param name="title">ダイアログタイトルを指定します。</param>
     /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
-    public Task<bool> ShowErrorDialog(string message, string? title, string?[]? buttonCaptions)
+    public Task<MessageBoxResult> ShowErrorDialog(string message, string? title, string?[]? buttonCaptions)
     {
-        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, buttonCaptions);
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, MessageBoxButton.OkCancel, buttonCaptions);
+    }
+
+    /// <summary>
+    /// エラーダイアログを表示します。
+    /// </summary>
+    /// <param name="message">メッセージを指定します。</param>
+    /// <param name="title">ダイアログタイトルを指定します。</param>
+    /// <param name="button">表示するボタンを指定します。</param>
+    /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
+    /// <returns>ダイアログ結果を返すタスク。</returns>
+    public Task<MessageBoxResult> ShowErrorDialog(string message, string? title, MessageBoxButton button, string?[]? buttonCaptions)
+    {
+        return ShowDialog(new RenderFragment(x => x.AddContent(1, message)), title, MessageBoxIcon.Error, button, buttonCaptions);
     }
 
     /// <summary>
@@ -163,31 +263,30 @@ public class ModalService : IModalService
     /// <param name="buttonCaptions">ボタンのキャプションを指定します。</param>
     /// <returns>ダイアログ結果を返すタスク。</returns>
     /// <exception cref="InvalidOperationException">サービスの提供先が存在しない場合に発生します。</exception>
-    private async Task<bool> ShowDialog(RenderFragment content, string? title, MessageBoxIcon image, string?[]? buttonCaptions)
+    private async Task<MessageBoxResult> ShowDialog(RenderFragment content, string? title, MessageBoxIcon image, MessageBoxButton button, string[]? buttonCaptions)
     {
         if (this.OnShow is null)
             throw new InvalidOperationException();
 
-        var okButtonCaption = ((buttonCaptions?.Length > 0) && (buttonCaptions[0] is not null)) ? buttonCaptions[0] : "OK";
-        var cancelButtonCaption = ((buttonCaptions?.Length > 1) && (buttonCaptions[1] is not null)) ? buttonCaptions[1] : "Cancel";
-        var dlg = await this.OnShow.Invoke(content, title, image, new string?[] { okButtonCaption, cancelButtonCaption });
+        //if (button == MessageBoxButton.Ok)
+        var dlg = await this.OnShow.Invoke(content, title, image, button, buttonCaptions);
 
         if (dlg is not null)
         {
             await Task.Run(() =>
             {
-                while (dlg.DialogResult is null)
+                while (dlg.DialogResult == MessageBoxResult.Undefined)
                 {
                 }
             });
-            return dlg.DialogResult.HasValue ? dlg.DialogResult.Value : false;
+            return dlg.DialogResult;
         }
 
-        return false;
+        return MessageBoxResult.Undefined;
     }
 
     /// <summary>
     /// ダイアログを表示するときに発生します。
     /// </summary>
-    public event Func<RenderFragment, string?, MessageBoxIcon, string?[], Task<ModalDialogBase>>? OnShow;
+    public event Func<RenderFragment, string?, MessageBoxIcon, MessageBoxButton, string[]?, Task<ModalDialogBase>>? OnShow;
 }
