@@ -27,11 +27,11 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (string.IsNullOrEmpty(this.Message))
         {
-            await this._modalService.ShowErrorDialog("メッセージを入力してください。");
+            await this._modalService.ShowErrorDialogAsync("メッセージを入力してください。");
         }
         else
         {
-            this.DialogResult = await this._modalService.ShowDialog(this.Message, this.DialogTitle, this.ButtonCaptions);
+            this.DialogResult = await this._modalService.ShowDialogAsync(this.Message, this.DialogTitle, this.ButtonCaptions);
         }
     }
 
@@ -42,11 +42,11 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (string.IsNullOrEmpty(this.Message))
         {
-            await this._modalService.ShowErrorDialog("メッセージを入力してください。");
+            await this._modalService.ShowErrorDialogAsync("メッセージを入力してください。");
         }
         else
         {
-            this.DialogResult = await this._modalService.ShowInformationDialog(this.Message, this.DialogTitle, this.ButtonCaptions);
+            this.DialogResult = await this._modalService.ShowInformationDialogAsync(this.Message, this.DialogTitle, this.ButtonCaptions);
         }
     }
 
@@ -57,11 +57,11 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (string.IsNullOrEmpty(this.Message))
         {
-            await this._modalService.ShowErrorDialog("メッセージを入力してください。");
+            await this._modalService.ShowErrorDialogAsync("メッセージを入力してください。");
         }
         else
         {
-            this.DialogResult = await this._modalService.ShowWarningDialog(this.Message, this.DialogTitle, this.ButtonCaptions);
+            this.DialogResult = await this._modalService.ShowWarningDialogAsync(this.Message, this.DialogTitle, this.ButtonCaptions);
         }
     }
 
@@ -72,11 +72,11 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (string.IsNullOrEmpty(this.Message))
         {
-            await this._modalService.ShowErrorDialog("メッセージを入力してください。");
+            await this._modalService.ShowErrorDialogAsync("メッセージを入力してください。");
         }
         else
         {
-            this.DialogResult = await this._modalService.ShowErrorDialog(this.Message, this.DialogTitle, this.ButtonCaptions);
+            this.DialogResult = await this._modalService.ShowErrorDialogAsync(this.Message, this.DialogTitle, this.ButtonCaptions);
         }
     }
 
@@ -88,7 +88,7 @@ public class AdvancedComponentsViewModel : NotificationObject
     {
         if (type == null) return;
 
-        this.SampleDialogResult = await this._modalService.ShowDialog(type);
+        this.SampleDialogResult = await this._modalService.ShowDialogAsync(type);
     }
 
     /// <summary>
