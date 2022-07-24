@@ -1,9 +1,168 @@
 ﻿@page "/Tutorials/Dialog"
-@inherits HighlightView
+@inherits HighlightView<DialogViewModel>
 
-<SidebarMenuItems CurrentPage="Message Dialog" />
+<SidebarMenuItems CurrentPage="Modal Dialog" />
 
 <div class="col-9">
-<h3>Message Dialog</h3>
+  <div class="justify-content-between">
+    <h1>ModalDialog Component</h1>
+    <p>ユーザに対してメッセージ等を表示したり、それに対するアクションの返答を受け付けるための UI としてメッセージダイアログはよく用いられる手段のひとつです。YKToolkit.Blazor では ModalDialog コンポーネントとしてこの機能を提供しています。ここでは、ModalDialog コンポーネントを Blazor Server アプリケーションに導入する方法について紹介します。</p>
 
+    <h2>準備</h2>
+    <p>ダイアログを表示するコンポーネントは ModalDialog コンポーネントですが、これを使うために必要な準備をおこないましょう。まずは Program.cs からサービスの登録をおこないます。ただし、<a href="/Tutorials/ViewComponentBase">ViewComponentBase class のチュートリアル</a>を参考にしながら、MainViewModel クラスを Index.razor に対する ViewModel として導入した状態を「修正前」として表現しています。</p>
+
+    <div class="row mb-3">
+        <div class="col-6">
+            <div class="card card-code">
+                <div class="card-title ps-2 my-1">Program.cs（修正前）</div>
+                <div class="card-text">
+                  <pre><code class="cs">using BlazorApp1.ViewModels;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+// ViewModel の追加
+builder.Services.AddScoped&lt;MainViewModel&gt;();
+
+// 以下略</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card card-code">
+                <div class="card-title ps-2 my-1">Program.cs（修正後）</div>
+                <div class="card-text">
+                  <pre><code class="cs">using BlazorApp1.ViewModels;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using YKToolkit.Blazor;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+// ダイアログ表示に必要なサービスを追加
+builder.Services.AddModal();
+builder.Services.AddScoped&lt;ModalDialogBase, ModalDialog&gt;();
+
+// ViewModel の追加
+builder.Services.AddScoped&lt;MainViewModel&gt;();
+
+// 以下略</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>次に、MainLayout.razor で &#064;Body と同じ位置に ModalDialog コンポーネントを配置します。&#064;Body 周辺コードなど、MainLayout.razor の詳細な実装方法はアプリケーションによって様々ですが、ここで重要なポイントはとにかく ModalDialog コンポーネントをレイアウトにあらかじめ配置しておくことにあります。</p>
+
+    <div class="row mb-3">
+      <div class="col-6">
+        <div class="card card-code">
+          <div class="card-title ps-2 my-1">MainLayout.razor（修正前）</div>
+          <div class="card-text">
+            <pre><code class="html">&#064;inherits LayoutComponentBase
+
+&lt;PageTitle&gt;BlazorApp1&lt;/PageTitle&gt;
+
+&lt;ErrorBoundary &#064;ref="_errorBoundary"&gt;
+  &lt;ChildContent&gt;
+    &#064;Body
+  &lt;ChildContent&gt;
+  &lt;ErrorContent&gt;
+
+// 以下略</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="card card-code">
+          <div class="card-title ps-2 my-1">MainLayout.razor（修正後）</div>
+          <div class="card-text">
+            <pre><code class="html">&#064;inherits LayoutComponentBase
+
+&lt;PageTitle&gt;BlazorApp1&lt;/PageTitle&gt;
+
+&lt;ErrorBoundary &#064;ref="_errorBoundary"&gt;
+  &lt;ChildContent&gt;
+    &#064;Body
+    &lt;ModalDialog /&gt;
+  &lt;ChildContent&gt;
+  &lt;ErrorContent&gt;
+
+// 以下略</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>こうすることで ModalDialog コンポーネントは常にページと同時に見えない形で配置され、必要な時にオーバーラップする形で表示されるようになります。また、ModalDialog コンポーネントの中身は用途に従って切り替えたり差し替えたりして表示内容を変更します。</p>
+
+    <h2>ダイアログ呼び出しを実装する</h2>
+    <p>いよいよダイアログを呼び出してみましょう。例えば MainViewModel から呼び出す場合、そのサービスを使用できるようにコンストラクタで準備をおこないます。さらに、このサービスを利用してダイアログを表示するためのテスト的なコマンドを用意します。</p>
+
+    <div class="card card-code">
+        <div class="card-title ps-2 my-1">MainViewModel.cs</div>
+        <div class="card-text">
+            <pre><code class="cs">using YKToolkit.Blazor;
+
+namespace BlazorApp1.ViewModels;
+
+/// &lt;summary&gt;
+/// Index コンポーネントに対する ViewModel を表します。
+/// &lt;/summary&gt;
+public class MainViewModel : NotificationObject
+{
+    /// &lt;summary&gt;
+    /// 新しいインスタンスを生成します。
+    /// &lt;summary&gt;
+    /// &lt;param name="modalService"&gt;モーダルダイアログ用のサービス&lt;/param&gt;
+    public AdvancedComponentsViewModel(IModalService modalService)
+    {
+        this._modalService = modalService;
+
+        this.TestDialogCommand = new DelegateCommand(_ => TestDialog());
+    }
+
+    private async void TestDialog()
+    {
+        var result = await this._modalService.ShowDialogAsync("メッセージダイアログのテストです。");
+    }
+
+    public DelegateCommand TestDialogCommand { get; private set; }
+
+    private IModalService _modalService;
+}</code></pre>
+        </div>
+    </div>
+
+    <p>用意した TestDialogCommand をバインドするボタンを UI に配置しましょう。</p>
+
+    <div class="card card-code">
+        <div class="card-title ps-2 my-1">Index.razor</div>
+        <div class="card-text">
+            <pre><code class="cs">&#064;page "/"
+&#064;inherits ViewComponentBase&lt;MainViewModel&gt;
+
+&lt;PageTitle&gt;Index/&lt;PageTitle&gt;
+
+&lt;Button class="btn btn-primary" Command="DataContext.TestDialogCommand"&gt;Click me./&lt;Button&gt;</code></pre>
+        </div>
+    </div>
+
+    <p>実行すると、次のようなボタンが表示され、押すとダイアログが表示されます。</p>
+    <Button class="btn btn-primary" Command="DataContext.TestDialogCommand">Click me.</Button>
+
+    <p>ダイアログを閉じるときに押したボタンの種類に応じて戻り値が変化するので、ユーザの選択によってその後の処理を分岐することができるようになっています。また、ダイアログ表示に使用した ShowDialogAsync() メソッドは様々なオーバーロードが用意されています。さらに ShowInformationDialogAsync()、ShowWarningDialogAsync()、ShowErrorDialogAsync() メソッドを使い分けることで情報、警告、警報のアイコン付きダイアログを簡単に表示することもできるので色々試してみてください。</p>
+
+  </div>
 </div>

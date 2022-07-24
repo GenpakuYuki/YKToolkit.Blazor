@@ -18,6 +18,7 @@ builder.Services.AddScoped<MainViewModel>();
 builder.Services.AddScoped<StandardComponentsViewModel>();
 builder.Services.AddScoped<AdvancedComponentsViewModel>();
 builder.Services.AddScoped<SampleDialogViewModel>();
+builder.Services.AddScoped<DialogViewModel>();
 
 var app = builder.Build();
 
