@@ -1,0 +1,53 @@
+﻿@page "/Tutorials/UsingDll"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="Using DLL" />
+
+<div class="col-9">
+  <div class="justify-content-between">
+    <h1>外部 DLL 参照方法</h1>
+    <p>通常は NuGet パッケージマネージャ等を利用することで簡単に導入できますが、自作の DLL など NuGet に公開されていない外部 DLL を参照する場合は .csproj ファイルを手書きで修正する必要があります。例えば YKToolit.Blazor.dll は次のように導入します。</p>
+
+    <div class="row mb-3">
+        <div class="col-6">
+            <div class="card card-code">
+                <div class="card-title ps-2 my-1">BlazorApp1.csproj（修正前）</div>
+                <div class="card-text">
+                  <pre><code class="cs">&lt;Project Sdk="Microsoft.NET.Sdk.Web"&gt;
+
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net6.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card card-code">
+                <div class="card-title ps-2 my-1">BlazorApp1.csproj（修正後）</div>
+                <div class="card-text">
+                  <pre><code class="cs">&lt;Project Sdk="Microsoft.NET.Sdk.Web"&gt;
+
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net6.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;
+
+    &lt;ItemGroup&gt;
+        &lt;Reference Include="YKToolkit.Blazor"&gt;
+            &lt;SpecificVersion&gt;False&lt;/SpecificVersion&gt;
+            &lt;HintPath&gt;D:\YKToolkit.Blazor.dll&lt;/HintPath&gt;
+        &lt;/Reference&gt;
+    &lt;/ItemGroup&gt;
+&lt;/Project&gt;</code></pre>
+                </div>
+            </div>
+            <p>HintPath に .dll ファイルの絶対パスを指定しています。</p>
+        </div>
+    </div>
+
+  </div>
+</div>
