@@ -1,0 +1,161 @@
+﻿@page "/Tutorials/ItemsControl"
+@inherits HighlightView<ItemsControlViewModel>
+
+<SidebarMenuItems CurrentPage="ItemsControl" />
+
+<div class="col-9">
+<h1>ItemsControl コンポーネント</h1>
+<p>コレクションデータの各要素をそれぞれコンテナに格納しながら UI を構築するためのコンポーネントです。</p>
+
+<h2>実装サンプル</h2>
+<p>実装方法は次のようになります。</p>
+
+<div class="card card-code mb-4">
+    <div class="card-title ps-2 my-1">Index.razor</div>
+    <div class="card-text">
+        <pre><code class="cshtml">&#064;page "/"
+&#064;inherits ViewComponentBase&lt;MainViewModel&gt;
+
+&lt;PageTitle&gt;Index&lt;/PageTitle&gt;
+
+&lt;div class="container-fluid"&gt;
+    &lt;div class="row mb-3"&gt;
+        &lt;div class="col-3"&gt;
+            &lt;ItemsControl ItemsSource="DataContext.Numbers" /&gt;
+        &lt;/div&gt;
+        &lt;div class="col-3"&gt;
+            &lt;ul class="list-group"&gt;
+                &lt;ItemsControl ItemsSource="DataContext.Numbers"&gt;
+                    &lt;li class="list-group-item"&gt;No.&#064;context&lt;/li&gt;
+                &lt;/ItemsControl&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="col-3"&gt;
+            &lt;ul class="list-group"&gt;
+                &lt;ItemsControl ItemsSource="DataContext.Persons"&gt;
+                    &lt;li class="list-group-item"&gt;&#064;context.Name (&#064;context.Age)&lt;/li&gt;
+                &lt;/ItemsControl&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="row mb-3"&gt;
+        &lt;table class="table table-striped table-hover"&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;名前&lt;/th&gt;
+                    &lt;th&gt;年齢&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+                &lt;ItemsControl ItemsSource="DataContext.Persons" Context="p"&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt;&#064;p.Name&lt;/td&gt;
+                        &lt;td&gt;&#064;p.Age&lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/ItemsControl&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">MainViewModel.cs</div>
+            <div class="card-text">
+                <pre><code class="cs">using BlazorApp1.Models;
+
+namespace BlazorApp1.ViewModels;
+
+public class MainViewModel : NotificationObject
+{
+    /// &lt;summary&gt;
+    /// 数値コレクションを取得します。
+    /// &lt;/summary&gt;
+    public IEnumerable&lt;int&gt; Numbers { get; } = Enumerable.Range(0, 5).ToArray();
+
+    /// &lt;summary&gt;
+    /// 人物情報コレクションを取得します。
+    /// &lt;/summary&gt;
+    public IEnumerable&lt;Person&gt; Persons { get; } = Enumerable.Range(0, 5).Select(x =&gt; new Person() { Name = $"太郎 {x}", Age = x }).ToArray();
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">Person.cs</div>
+            <div class="card-text">
+                <pre><code class="cs">namespace BlazorApp1.Models;
+
+/// &lt;summary&gt;
+/// 人物情報を表します。
+/// &lt;/summary&gt;
+public class Person
+{
+    /// &lt;summary&gt;
+    /// 名前を取得または設定します。
+    /// &lt;/summary&gt;
+    public string? Name { get; set; }
+
+    /// &lt;summary&gt;
+    /// 年齢を取得または設定します。
+    /// &lt;/summary&gt;
+    public int Age { get; set; }
+}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title ps-2 my-1">実行例</div>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-3">
+                <ItemsControl ItemsSource="DataContext.Numbers" />
+            </div>
+            <div class="col-3">
+                <ul class="list-group">
+                    <ItemsControl ItemsSource="DataContext.Numbers">
+                        <li class="list-group-item">No.@context</li>
+                    </ItemsControl>
+                </ul>
+            </div>
+            <div class="col-3">
+                <ul class="list-group">
+                    <ItemsControl ItemsSource="DataContext.Persons">
+                        <li class="list-group-item">@context.Name (@context.Age)</li>
+                    </ItemsControl>
+                </ul>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>名前</th>
+                        <th>年齢</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ItemsControl ItemsSource="DataContext.Persons" Context="p">
+                        <tr>
+                            <td>@p.Name</td>
+                            <td>@p.Age</td>
+                        </tr>
+                    </ItemsControl>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<p>ItemsControl コンポーネントは、デフォルトでは与えられたコレクションの各要素を縦並びに表示します。上記の例では MainViewModel クラスが持つ Numbers プロパティによって、0 から 4 の数値が順に表示されます。</p>
+<p>ItemsControl コンポーネントは指定されたコンテナをコレクションの各要素を適用しながら並べるため、14 行目のように &lt;ul&gt; タグの内側で &lt;li&gt; タグを繰り返し配置するようにすることもできます。このとき、各要素を &#064;context というキーワードで扱うことができます。</p>
+<p>さらに、20 行目では Person クラスオブジェクトのコレクションを与えることで、&#064;context の中身は各要素である Person クラスオブジェクトとなります。このため、&#064;context に続けて Person クラスが持つ Name プロパティや Age プロパティを指定することができます。</p>
+<p>35 行目ではテーブルの構成要素として &lt;tr&gt; タグを並べるようにしています。さきほどは各要素を &#064;context として表現していましたが、ItemsControl コンポーネントに Context 属性を指定することで、指定した文字列に置き換えることができます。上記の例では "p" を指定しているため、&#064;context の代わりに &#064;p として子要素を表現しています。この方法は ItemsControl コンポーネントなどを入れ子にして使用するときに活用できます。入れ子にした場合、デフォルトの &#064;context がどのコンポーネントに対する子要素なのか判別できなくなるため、Context 属性によるキーワードの指定が必須になります。</p>
+</div>
