@@ -1,0 +1,57 @@
+﻿@page "/Tutorials/BindingToSource"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="Data Binding To Source" />
+
+<div class="col-9">
+<h1>データバインディングにおけるソースへの反映</h1>
+<p>ViewComponentBase&lt;T&gt; を使用することで ViewModel 層のオブジェクトを、DataContext プロパティを通して活用できるようになります。しかし、これは ViewModel から View、すなわちソースからターゲットへの OneWay な関係になります。ターゲットからソースへのデータバインディングをする場合、Blazor では該当するプロパティに対して "&#064;bind-" というサフィックスを明示的に付ける必要があります。</p>
+<p>例えば ComboBox コンポーネントの SelectedItem プロパティは選択されたアイテムを表しますが、どのアイテムが選択されたかどうかという情報は ViewModel 層へ伝えることがしばしば発生します。このとき、"&#064;bind-" サフィックスを用いて次のように記述します。</p>
+
+<div class="card card-code mb-4">
+    <div class="card-title ps-2 my-1">Index.razor</div>
+    <div class="card-text">
+        <pre><code class="cshtml">&lt;ComboBox id="combobox2" ItemsSource="DataContext.Persons" &#064;bind-SelectedItem="DataContext.SelectedPerson"&gt;
+    &#064;if (context is not null)
+    {
+        &lt;div&gt;&#064;context.Name (&#064;context.Age)&lt;/div&gt;
+    }
+&lt;/ComboBox&gt;</code></pre>
+    </div>
+</div>
+
+<p>ComboBox コンポーネントの詳細な使い方については<a href="/Tutorials/ComboBox">チュートリアル</a>を参考にしてもうらうとして、ここで重要なポイントは ComboBox コンポーネントの SelectedItem プロパティに対して "&#064;bind-" というサフィックスがついていることです。このようにプロパティを記述することで、プロパティに指定した DataContext.SelectedPerson プロパティにその変更内容が反映されるようになります。例えば ViewModel 側で SelectedPerson プロパティが変更されたときに何か処理をするようにするとこのことを容易に確認できます。</p>
+
+<div class="card card-code mb-4">
+    <div class="card-title ps-2 my-1">MainViewModel</div>
+    <div class="card-text">
+        <pre><code class="cs">using BlazorApp1.Models;
+
+namespace BlazorApp1.ViewModels;
+
+public class MainViewModel : NotificationObject
+{
+    /// &lt;summary&gt;
+    /// 人物情報コレクションを取得します。
+    /// &lt;/summary&gt;
+    public IEnumerable&lt;Person&gt; Persons { get; } = Enumerable.Range(0, 5).Select(x => new Person() { Name = $"太郎 {x}", Age = x }).ToArray();
+
+    private Person? _selectedPerson;
+    /// &lt;summary&gt;
+    /// 選択中の人物情報を取得または設定します。
+    /// &lt;/summary&gt;
+    public Person? SelectedPerson
+    {
+        get => this._selectedPerson;
+        set
+        {
+            if (SetProperty(ref this._selectedPerson, value))
+            {
+                System.Diagnostics.Debug.WriteLine(this._selectedPerson?.Name);
+            }
+        }
+    }
+}</code></pre>
+    </div>
+</div>
+</div>
