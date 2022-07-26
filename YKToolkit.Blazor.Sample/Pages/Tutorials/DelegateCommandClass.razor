@@ -78,32 +78,31 @@ public class DelegateCommand : ICommand
 <div class="card card-code">
     <div class="card-title ps-2 my-1">MainViewModel.cs</div>
     <div class="card-text">
-        <pre><code class="cs">namespace YKToolkit.Blazor.Sample.ViewModels
+        <pre><code class="cs">namespace BlazorApp1.ViewModels;
+
+public class MainViewModel : NotificationObject
 {
-    public class MainViewModel : NotificationObject
+    public MainViewModel()
     {
-        public MainViewModel()
-        {
-            this.TestCommand = new DelegateCommand(_ => Test(), _ => this.IsBusy == false);
-        }
+        this.TestCommand = new DelegateCommand(_ => Test(), _ => this.IsBusy == false);
+    }
 
-        private void Test()
-        {
-            // 何か処理
-        }
+    private void Test()
+    {
+        // 何か処理
+    }
 
-        public DelegateCommand TestCommand { get; private set; }
+    public DelegateCommand TestCommand { get; private set; }
 
-        private bool _isBusy;
-        public bool IsBusy
+    private bool _isBusy;
+    public bool IsBusy
+    {
+        get => this._isBusy;
+        set
         {
-            get => this._isBusy;
-            set
+            if (SetProperty(ref this._isBusy, value))
             {
-                if (SetProperty(ref this._isBusy, value))
-                {
-                    this.TestCommand.RaiseCanExecuteChanged();
-                }
+                this.TestCommand.RaiseCanExecuteChanged();
             }
         }
     }

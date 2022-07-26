@@ -58,45 +58,44 @@ public abstract class NotificationObject : INotifyPropertyChanged
 <div class="card card-code">
     <div class="card-title ps-2 my-1">MainViewModel.cs</div>
     <div class="card-text">
-        <pre><code class="cs">namespace BlazorApp1.ViewModels
+        <pre><code class="cs">namespace BlazorApp1.ViewModels;
+
+public class MainViewModel : NotificationObject
 {
-    public class MainViewModel : NotificationObject
+    private int _age;
+    public int Age
     {
-        private int _age;
-        public int Age
-        {
-            get => this._age;
-            set => SetProperty(ref this._age, value);
-        }
-
-        private string _lastName = string.Empty;
-        public string LastName
-        {
-            get => this._lastName;
-            set
-            {
-                if (SetProperty(ref this._lastName, value))
-                {
-                    RaisePropertyChanged(nameof(this.FullName));
-                }
-            }
-        }
-
-        private string _firstName = string.Empty;
-        public string FirstName
-        {
-            get => this._firstName;
-            set
-            {
-                if (SetProperty(ref this._firstName, value))
-                {
-                    RaisePropertyChanged(nameof(this.FullName));
-                }
-            }
-        }
-
-        public string FullName { get => $"{this.FirstName} {this.LastName}"; }
+        get => this._age;
+        set => SetProperty(ref this._age, value);
     }
+
+    private string _lastName = string.Empty;
+    public string LastName
+    {
+        get => this._lastName;
+        set
+        {
+            if (SetProperty(ref this._lastName, value))
+            {
+                RaisePropertyChanged(nameof(this.FullName));
+            }
+        }
+    }
+
+    private string _firstName = string.Empty;
+    public string FirstName
+    {
+        get => this._firstName;
+        set
+        {
+            if (SetProperty(ref this._firstName, value))
+            {
+                RaisePropertyChanged(nameof(this.FullName));
+            }
+        }
+    }
+
+    public string FullName { get => $"{this.FirstName} {this.LastName}"; }
 }</code></pre>
     </div>
 </div>
