@@ -1,0 +1,128 @@
+﻿@page "/Tutorials/ComboBox"
+@inherits HighlightView<ComboBoxViewModel>
+
+<SidebarMenuItems CurrentPage="ComboBox" />
+
+<div class="col-9">
+<h1>ComboBox コンポーネント</h1>
+<p>コレクションデータの各要素を選択肢としたセレクトボックスを表現するためのコンポーネントです。</p>
+
+<h2>実装サンプル</h2>
+<p>実装方法は次のようになります。</p>
+
+<div class="card card-code mb-4">
+    <div class="card-title ps-2 my-1">Index.razor</div>
+    <div class="card-text">
+        <pre><code class="cshtml">&#064;page "/"
+&#064;inherits ViewComponentBase&lt;MainViewModel&gt;
+
+&lt;PageTitle&gt;Index&lt;/PageTitle&gt;
+
+&lt;div class="container-fluid"&gt;
+    &lt;div class="row mb-3"&gt;
+        &lt;div class="col-4"&gt;
+            &lt;label for="combobox1"&gt;DisplayMemberPath を指定した場合&lt;/label&gt;
+            &lt;ComboBox id="combobox1" ItemsSource="DataContext.Persons" DisplayMemberPath="Name" &#064;bind-SelectedItem="DataContext.SelectedPerson" /&gt;
+        &lt;/div&gt;
+        &lt;div class="col-4"&gt;
+            &lt;label for="combobox2"&gt;ChildContent を指定した場合&lt;/label&gt;
+            &lt;ComboBox id="combobox2" ItemsSource="DataContext.Persons" &#064;bind-SelectedItem="DataContext.SelectedPerson"&gt;
+                &#064;if (context is not null)
+                {
+                    &lt;div&gt;&#064;context.Name (&#064;context.Age)&lt;/div&gt;
+                }
+            &lt;/ComboBox&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">MainViewModel.cs</div>
+            <div class="card-text">
+                <pre><code class="cs">using BlazorApp1.Models;
+
+namespace BlazorApp1.ViewModels;
+
+public class MainViewModel : NotificationObject
+{
+    /// &lt;summary&gt;
+    /// 人物情報コレクションを取得します。
+    /// &lt;/summary&gt;
+    public IEnumerable&lt;Person&gt; Persons { get; } = Enumerable.Range(0, 5).Select(x =&gt; new Person() { Name = $"太郎 {x}", Age = x }).ToArray();
+
+    private Person? _selectedPerson;
+    /// &lt;summary&gt;
+    /// 選択中の人物情報を取得または設定します。
+    /// &lt;/summary&gt;
+    public Person? SelectedPerson
+    {
+        get =&gt; this._selectedPerson;
+        set
+        {
+            if (SetProperty(ref this._selectedPerson, value))
+            {
+                System.Diagnostics.Debug.WriteLine(this._selectedPerson?.Name);
+            }
+        }
+    }
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">Person.cs</div>
+            <div class="card-text">
+                <pre><code class="cs">namespace BlazorApp1.Models;
+
+/// &lt;summary&gt;
+/// 人物情報を表します。
+/// &lt;/summary&gt;
+public class Person
+{
+    /// &lt;summary&gt;
+    /// 名前を取得または設定します。
+    /// &lt;/summary&gt;
+    public string? Name { get; set; }
+
+    /// &lt;summary&gt;
+    /// 年齢を取得または設定します。
+    /// &lt;/summary&gt;
+    public int Age { get; set; }
+}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title ps-2 my-1">実行例</div>
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label for="combobox1">DisplayMemberPath を指定した場合</label>
+                    <ComboBox id="combobox1" ItemsSource="DataContext.Persons" DisplayMemberPath="Name" @bind-SelectedItem="DataContext.SelectedPerson" />
+                </div>
+                <div class="col-4">
+                    <label for="combobox2">ChildContent を指定した場合</label>
+                    <ComboBox id="combobox2" ItemsSource="DataContext.Persons" @bind-SelectedItem="DataContext.SelectedPerson">
+                        @if (context is not null)
+                        {
+                            <div>@context.Name (@context.Age)</div>
+                        }
+                    </ComboBox>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>ComboBox コンポーネントは、任意のクラスオブジェクトを選択肢としながら、選択されたオブジェクトをそのまま ViewModel 側にバインドできるようになっています。標準の InputSelect&lt;TValue&gt; コンポーネントを使用する場合、選択されたオブジェクトは文字列またはプリミティブな数値型でしかバインドできませんでした。YKToolkit.Blazor ライブラリでは任意のクラスオブジェクトをそのままバインドできるように工夫することで UI の構築をより容易なものにしています。</p>
+<p>WPF の ComboBox コントロールが持つプロパティと通じるところとして、DisplayMemberPath プロパティを用意してあります。また、YKToolkit.Blazor ライブラリが提供する ItemsControl コンポーネントと同様、子要素を指定すると、コレクションの各要素を並べるためのテンプレートとして使用されます。</p>
+</div>

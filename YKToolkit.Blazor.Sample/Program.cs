@@ -19,6 +19,7 @@ builder.Services.AddScoped<StandardComponentsViewModel>();
 builder.Services.AddScoped<AdvancedComponentsViewModel>();
 builder.Services.AddScoped<SampleDialogViewModel>();
 builder.Services.AddScoped<ItemsControlViewModel>();
+builder.Services.AddScoped<ComboBoxViewModel>();
 builder.Services.AddScoped<DialogViewModel>();
 
 var app = builder.Build();
