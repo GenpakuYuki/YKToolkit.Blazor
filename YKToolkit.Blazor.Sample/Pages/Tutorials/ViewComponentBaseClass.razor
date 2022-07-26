@@ -73,7 +73,7 @@ builder.Services.AddScoped&lt;CounterViewModel&gt;();
     </div>
 </div>
 
-<p>ViewComponentBase に指定したデータ型のインスタンスはコンストラクタインジェクションによって DataContext プロパティに埋め込まれるようになっています。このため、元々あった currentCount フィールドは例えば CounterViewModel クラスが持つ CurrentCount プロパティとすることで上記のようなデータバインディングが可能になります。また、button の onclick で実行するメソッドも DataContext プロパティを通して ViewModel が持つメソッドを指定できるようになります。ただし、YKToolkit.Blazor クラスライブラリでは ICommand インターフェースを実装した DelegateCommand クラスと、これに対応した Button コンポーネントを提供しています。これらを使用することでより WPF に近い書き方でボタン処理を実装することができます。</p>
+<p>ViewComponentBase に指定したデータ型のインスタンスはコンストラクタインジェクションによって DataContext プロパティに埋め込まれるようになっています。このため、元々あった currentCount フィールドは例えば CounterViewModel クラスが持つ CurrentCount プロパティとすることで上記のようなデータバインディングが可能になります。また、button の onclick で実行するメソッドも DataContext プロパティを通して ViewModel が持つメソッドを指定できるようになります。ただし、YKToolkit.Blazor クラスライブラリでは ICommand インターフェースを実装した <a href="/Tutorials/DelegateCommand">DelegateCommand クラス</a>と、これに対応した <a href="/Tutorials/Button">Button コンポーネント</a>を提供しています。これらを使用することでより WPF に近い書き方でボタン処理を実装することができます。</p>
 <p>上記の例では ViewModel のスコープを AddScoped&lt;T&gt; メソッドで指定していますが、AddSingleton&lt;T&gt; メソッドで指定するなど、ケースバイケースで決定してください。</p>
 <p>ViewModel 側は INotifyPropertyChanged インターフェースを実装する必要があるため、WPF と同様に以下のような実装になります。</p>
 

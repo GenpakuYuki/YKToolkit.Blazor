@@ -1,0 +1,100 @@
+﻿@page "/Tutorials/Button"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="Button" />
+
+<div class="col-9">
+<h1>Button コンポーネント</h1>
+<p>ICommand インターフェースを実装したコマンドに対応したボタン UI コンポーネントです。</p>
+
+<h2>標準ボタンによるメソッドの実行</h2>
+<p>HTML 標準のボタンを使用した場合、次のような方法で ViewModel が持つメソッドを直接実行できます。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">Counter.razor（修正前）</div>
+    <div class="card-text">
+        <pre><code class="cshtml">&#064;page "/counter"
+&#064;inherits ViewComponentBase&lt;CounterViewModel&gt;
+
+&lt;PageTitle&gt;Counter&lt;/PageTitle&gt;
+
+&lt;h1&gt;Counter&lt;/h1&gt;
+
+&lt;p role="status"&gt;Current count: &#064;DataContext.CurrentCount&lt;/p&gt;
+
+&lt;button class="btn btn-primary" &#064;onclick="DataContext.IncrementCount"&gt;Click me&lt;/button&gt;</code></pre>
+    </div>
+</div>
+
+<p>この方法が良い場合もありますが、WPF 流で考えた場合、実行可能判別機能も兼ね備えた ICommand インターフェースをバインドしたほうが使い勝手が良い場合もあります。</p>
+
+<h2>YKToolkit.Blazor.Button コンポーネント</h2>
+<p>実装方法は次のようになります。</p>
+
+<div class="row">
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">Counter.razor（修正後）</div>
+            <div class="card-text">
+        <pre><code class="cshtml">&#064;page "/counter"
+&#064;inherits ViewComponentBase&lt;CounterViewModel&gt;
+
+&lt;PageTitle&gt;Counter&lt;/PageTitle&gt;
+
+&lt;h1&gt;Counter&lt;/h1&gt;
+
+&lt;p role="status"&gt;Current count: &#064;DataContext.CurrentCount&lt;/p&gt;
+
+&lt;Button class="btn btn-primary" Command="DataContext.IncrementCommand"&gt;Click me&lt;/Button&gt;</code></pre>
+            </div>
+        </div>
+        <p>Button コンポーネントには CommandParameter プロパティもありますが説明を割愛します。</p>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-code">
+            <div class="card-title ps-2 my-1">CounterViewModel.cs</div>
+            <div class="card-text">
+        <pre><code class="cs">namespace BlazorApp1.ViewModels;
+
+public class CounterViewModel : NotificationObject
+{
+    public CounterViewModel()
+    {
+        this.IncrementCommand = new DelegateCommand(_ => Increment(), _ => this.IsBusy == false);
+    }
+
+    private void Increment()
+    {
+        this.CurrentCount++;
+    }
+
+    public DelegateCommand IncrementCommand { get; private set; }
+
+    private bool _isBusy;
+    public bool IsBusy
+    {
+        get => this._isBusy;
+        set
+        {
+            if (SetProperty(ref this._isBusy, value))
+            {
+                this.IncrementCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    private int _currentCount
+    public int CurrentCount
+    {
+        get => this._currentCount;
+        set => SetProperty(ref this._currentCount, value);
+    }
+}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>ViewModel 側のコードは WPF の場合とまったく同じ書き方になっています。この例では IsBusy プロパティによってボタン操作の実行可否を決めています。</p>
+</div>

@@ -111,6 +111,6 @@ public class MainViewModel : NotificationObject
 </div>
 
 <p>TestCommand プロパティは ICommand インターフェースを通して Test() メソッドを実行するためのプロパティです。実行可否判定として IsBusy プロパティの値を参照しています。このため、IsBusy プロパティの setter では RaiseCanExecuteChanged() メソッドを呼び出すことで TestCommand プロパティの実行可否判定条件が変更したことを明示的に通知するようにしています。</p>
-<p>View から ViewModel のメソッドを直接呼び出すことができなかった WPF と違い、Blazor では ViewComponentBase&lt;T&gt; が持つ DataContext プロパティを通して View から ViewModel のメソッドを直接呼び出すことができるため、ICommand インターフェースによるコマンドの提供は少し冗長なところがあります。一方で、ICommand インターフェースが提供する CanExecute() メソッドではそのコマンドの実行可否を判定します。YKToolkit.Blazor ライブラリが提供している Button コンポーネントなどは、この実行可否判定の結果によってコンポーネントの操作を無効化する機能を実装しています。</p>
+<p>View から ViewModel のメソッドを直接呼び出すことができなかった WPF と違い、Blazor では ViewComponentBase&lt;T&gt; が持つ DataContext プロパティを通して View から ViewModel のメソッドを直接呼び出すことができるため、ICommand インターフェースによるコマンドの提供は少し冗長なところがあります。一方で、ICommand インターフェースが提供する CanExecute() メソッドではそのコマンドの実行可否を判定します。YKToolkit.Blazor ライブラリが提供している <a href="/Tutorials/Button">Button コンポーネント</a>などは、この実行可否判定の結果によってコンポーネントの操作を無効化する機能を実装しています。</p>
 
 </div>
