@@ -1,0 +1,136 @@
+﻿@page "/Tutorials/Prerendering"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="Pre-Rendering" />
+
+<div class="col-9">
+  <div class="justify-content-between">
+    <h1>Pre-Rendering</h1>
+    <p>Blazor は SPA (Single Page Application) をデフォルトの開発スタイルとしているため、レンダリングについては事前にサーバ側へリクエストを投げるプリレンダリングという処理が既定の動作になっています。もちろんプリレンダリングしないように設定を変更することもできますが、多くの場合プリレンダリングをおこなったほうがより高速なユーザ体験を提供できるため、この設定を変更する必要はありません。</p>
+
+    <h2>ページの初期化処理</h2>
+    <p>プリレンダリングは一度サーバ側にリクエストを投げるという動作があるため、このときにページの初期化に関する処理が一度走ってしまいます。このことを確認するために、次のようにメソッドをオーバーライドしながら見ていきましょう。</p>
+
+    <div class="card card-code">
+        <div class="card-title ps-2 my-1">Index.razor</div>
+        <div class="card-text">
+            <pre><code class="cs">&#064;page "/"
+&#064;using System.Diagnostics
+
+&lt;PageTitle&gt;Index&lt;/PageTitle&gt;
+
+&lt;button class="btn btn-primary m-4" &#064;onclick="() => OnClick()"&gt;Click me.&lt;/button&gt;
+
+&#064;code
+{
+    public Index()
+    {
+        Debug.WriteLine("コンストラクタ");
+    }
+
+    private void OnClick()
+    {
+        Debug.WriteLine("ボタンクリック");
+        StateHasChanged();
+    }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        Debug.WriteLine("SetParametersAsync");
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        Debug.WriteLine("OnInitialized");
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        Debug.WriteLine("OnInitializedAsync");
+        return base.OnInitializedAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        Debug.WriteLine("OnParametersSet");
+        base.OnParametersSet();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        Debug.WriteLine("OnParametersSetAsync");
+        return base.OnParametersSetAsync();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Debug.WriteLine($"OnAfterRender({firstRender})");
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Debug.WriteLine($"OnAfterRenderAsync({firstRender})");
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override bool ShouldRender()
+    {
+        Debug.WriteLine("ShouldRender");
+        return base.ShouldRender();
+    }
+}</code></pre>
+        </div>
+    </div>
+
+    <p>ボタンを配置しただけのページですが、コードビハインドには以下のメソッドのオーバーライドが定義されています。</p>
+    <ul>
+        <li>SetParameterAsync</li>
+        <li>OnInitialized</li>
+        <li>OnInitializedAsync</li>
+        <li>OnParametersSet</li>
+        <li>OnParametersSetAsync</li>
+        <li>OnAfterRender</li>
+        <li>OnAfterRenderAsync</li>
+        <li>ShouldRender</li>
+    </ul>
+    <p>これを実行し、ページを表示するだけで次のような順番でデバッグ出力が表示されます。</p>
+
+    <div class="card card-code">
+        <div class="card-title ps-2 my-1">デバッグ出力</div>
+        <div class="card-text">
+            <pre><code class="html">コンストラクタ
+SetParametersAsync
+OnInitialized
+OnInitializedAsync
+OnParametersSet
+OnParametersSetAsync
+コンストラクタ
+SetParametersAsync
+OnInitialized
+OnInitializedAsync
+OnParametersSet
+OnParametersSetAsync
+OnAfterRender(True)
+OnAfterRenderAsync(True)</code></pre>
+        </div>
+    </div>
+    <p>注目すべきは、コンストラクタが 2 回走っているところです。プリレンダリングはサーバに対して 2 回リクエストを投げることになるため、1 回目と 2 回目でページのインスタンスが異なることになります。2 回目のアクセスによって生成されるインスタンスによってページが表示されることになるため、1 回目のアクセスではページ表示に関する初期化処理をしてはいけません。1 回目のプリレンダリングと 2 回目のページ表示では SetParameterAsync、OnInitialized、OnInitializedAsync、OnParametersSet、OnParametersAsync のメソッドが共通して処理されてしまい、なおかつこれらのメソッドの中では今 1 回目なのかそれとも 2 回目なのかの判断ができません。したがって、ページ表示に関する初期化はこれ以降に処理される OnAfterRender または OnAfterRenderAsync メソッドで実行すべきです。</p>
+    <p>初期化処理に長い時間がかかってしまうとページ表示にそれだけの時間がかかってしまうことになります。OnAfterRender メソッドは同期的に処理されるので、処理に時間がかかる場合は非同期的に処理される OnAfterRenderAsync メソッドで実行するようにしましょう。</p>
+
+    <h2>ページ更新処理</h2>
+    <p>さらにページ上にあるボタンをクリックすると今度は次のようなデバッグ出力が表示されます。</p>
+
+    <div class="card card-code">
+        <div class="card-title ps-2 my-1">デバッグ出力</div>
+        <div class="card-text">
+            <pre><code class="html">ボタンクリック
+ShouldRender
+OnAfterRender(False)
+OnAfterRenderAsync(False)</code></pre>
+        </div>
+    </div>
+    <p>OnClick メソッド内では StateHasChanged メソッドが呼び出されているため、ページ更新処理として再度レンダリングがおこなわれることになります。レンダリング処理として ShouldRender メソッドが実行されたのち、初期化処理と同様に OnAfterRender および OnAfterRenderAsync メソッドが実行されます。ただし、先ほどと違ってこれらの入力引数は false になっています。この入力引数によって初期化処理なのかページ更新処理なのかを判定できるようになっています。</p>
+
+  </div>
+</div>
