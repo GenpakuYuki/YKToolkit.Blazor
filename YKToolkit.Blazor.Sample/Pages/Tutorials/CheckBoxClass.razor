@@ -1,0 +1,41 @@
+﻿@page "/Tutorials/CheckBox"
+@inherits HighlightView
+
+<SidebarMenuItems CurrentPage="CheckBox" />
+
+<div class="col-9">
+<h1>CheckBox コンポーネント</h1>
+<p>ICommand インターフェースを実装したコマンドに対応したチェックボックス UI コンポーネントです。</p>
+
+<h2>実装サンプル</h2>
+<p>実装方法は次のようになります。</p>
+
+<div class="card card-code">
+    <div class="card-title ps-2 my-1">Index.razor</div>
+    <div class="card-text">
+        <pre><code class="cshtml">&#064;page "/"
+&#064;inherits ViewComponentBase&lt;MainViewModel&gt;
+
+&lt;PageTitle&gt;Index&lt;/PageTitle&gt;
+
+&lt;div class="container-fluid"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-3"&gt;
+            &lt;CheckBox Label="チェックボックス" IsChecked="DataContext.IsChecked" Command="DataContext.CheckCommand" /&gt;
+        &lt;/div&gt;
+        &lt;!-- チェック状態でボタンの有効性を切り替える --&gt;
+        &lt;div class="col-3"&gt;
+            &lt;CheckBox Label="ボタンを有効にする" &#064;bind-IsChecked="DataContext.IsButtonEnabled" /&gt;
+            &lt;Button class="btn btn-primary" IsEnabled="DataContext.IsButtonEnabled"&gt;Click me.&lt;/Button&gt;
+        &lt;/div&gt;
+        &lt;div class="col-3"&gt;
+            &lt;CheckBox Label="disabled" IsEnabled="false" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+</div>
+
+<p>チェック状態を IsChecked プロパティでバインドできるようになっています。また、WPF と同様、ラベルにもクリック判定があるため、チェックボックス本体だけでなく、ラベルをクリックしてもチェック状態を切り替えることができるようになっています。ラベルは Label プロパティで指定できます。</p>
+<p>ICommand インターフェースを実装したオブジェクトに対応した Command プロパティと、コマンドのためのパラメータを指定する CommandParameter プロパティを備えています。クリックされるとまずチェック状態が ON なら OFF、OFF なら ON に切り替わります。その後 Command プロパティに指定されたコマンドが、実行可能であれば実行される仕組みになっています。</p>
+</div>
