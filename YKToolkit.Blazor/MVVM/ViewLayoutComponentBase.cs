@@ -1,7 +1,7 @@
-﻿namespace ConfirmDialogFromVM;
-
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
+
+namespace YKToolkit.Blazor;
 
 public class ViewLayoutComponentBase<T> : LayoutComponentBase
     where T : class

@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using Microsoft.AspNetCore.Components;
 
+namespace YKToolkit.Blazor;
+
 /// <summary>
 /// Razor コンポーネントを MVVM インフラで使用するための機能を提供します。
 /// </summary>
