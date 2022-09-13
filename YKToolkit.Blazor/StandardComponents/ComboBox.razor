@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @typeparam T
 
-<select class="@(@class)" id="@id" @onchange="p => OnChange(p.Value)">
+<select class="@(@class)" id="@id" @onchange="p => OnChange(p.Value)" disabled="@IsDisable" >
     <ItemsControl ItemsSource="ItemsSource" Context="item">
         <option value="@item.GetHashCode()" selected="@(EqualityComparer<T>.Default.Equals(SelectedItem, item))">
             @if (ChildContent is not null)
@@ -99,6 +99,33 @@
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         InvokeAsync(StateHasChanged);
+    }
+
+    private bool isEnabled = true;
+    /// <summary>
+    /// コンボボックスが操作可能かどうかを設定または取得します
+    /// </summary>
+    [Parameter]
+    public bool IsEnabled { 
+        get => this.isEnabled; 
+        set 
+        {
+            this.isEnabled = value;
+            UpdateCanExecute();
+        } 
+    }
+
+    /// <summary>
+    /// コンボボックスが操作禁止状態かどうかを設定または取得します
+    /// </summary>
+    private bool IsDisable{ get; set; }
+
+    /// <summary>
+    /// コンボボックスの操作可否を更新します。
+    /// </summary>
+    private void UpdateCanExecute()
+    {
+        this.IsDisable = !this.IsEnabled;
     }
 
     /// <summary>
